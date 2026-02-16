@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZeroG | Nutrition AI</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="glass-header">
+            <div class="logo">
+                <i class="fa-solid fa-atom pulse"></i>
+                <h1>ZeroG</h1>
+            </div>
+            <button id="settings-btn" class="icon-btn"><i class="fa-solid fa-gear"></i></button>
+        </header>
+
+        <!-- Dashboard / Stats -->
+        <section class="dashboard">
+            <div class="stats-grid">
+                <!-- Carbs -->
+                <div class="stat-card" data-stat="carbs">
+                    <h3>Carbs</h3>
+                    <div class="progress-ring-container">
+                        <svg class="progress-ring" width="120" height="120">
+                            <circle class="progress-ring__circle-bg" stroke="rgba(255,255,255,0.1)" stroke-width="8"
+                                fill="transparent" r="52" cx="60" cy="60" />
+                            <circle class="progress-ring__circle" stroke="#00d2ff" stroke-width="8" fill="transparent"
+                                r="52" cx="60" cy="60" />
+                        </svg>
+                        <div class="stat-value">
+                            <span id="carbs-left">--</span>g
+                            <small>Left</small>
+                        </div>
+                    </div>
+                    <div class="stat-detail">
+                        <span id="carbs-used">0</span> / <span id="carbs-total">250</span>g
+                    </div>
+                </div>
+
+                <!-- Fats -->
+                <div class="stat-card" data-stat="fats">
+                    <h3>Fats</h3>
+                    <div class="progress-ring-container">
+                        <svg class="progress-ring" width="120" height="120">
+                            <circle class="progress-ring__circle-bg" stroke="rgba(255,255,255,0.1)" stroke-width="8"
+                                fill="transparent" r="52" cx="60" cy="60" />
+                            <circle class="progress-ring__circle" stroke="#3a7bd5" stroke-width="8" fill="transparent"
+                                r="52" cx="60" cy="60" />
+                        </svg>
+                        <div class="stat-value">
+                            <span id="fats-left">--</span>g
+                            <small>Left</small>
+                        </div>
+                    </div>
+                    <div class="stat-detail">
+                        <span id="fats-used">0</span> / <span id="fats-total">70</span>g
+                    </div>
+                </div>
+
+                <!-- Protein -->
+                <div class="stat-card" data-stat="protein">
+                    <h3>Protein</h3>
+                    <div class="progress-ring-container">
+                        <svg class="progress-ring" width="120" height="120">
+                            <circle class="progress-ring__circle-bg" stroke="rgba(255,255,255,0.1)" stroke-width="8"
+                                fill="transparent" r="52" cx="60" cy="60" />
+                            <circle class="progress-ring__circle" stroke="#9d50bb" stroke-width="8" fill="transparent"
+                                r="52" cx="60" cy="60" />
+                        </svg>
+                        <div class="stat-value">
+                            <span id="protein-left">--</span>g
+                            <small>Left</small>
+                        </div>
+                    </div>
+                    <div class="stat-detail">
+                        <span id="protein-used">0</span> / <span id="protein-total">100</span>g
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Monitor Section (Secondary Stats) -->
+        <section class="monitor glass-panel">
+            <h2>Monitor</h2>
+            <div class="monitor-item">
+                <div class="monitor-label"><i class="fa-solid fa-bolt"></i> Potassium</div>
+                <div class="monitor-bar-bg">
+                    <div class="monitor-bar-fill" id="potas-bar" style="width: 0%"></div>
+                </div>
+                <div class="monitor-text"><span id="potas-val">0</span> / <span id="potas-limit">3500</span> mg</div>
+            </div>
+            <div class="monitor-item">
+                <div class="monitor-label"><i class="fa-solid fa-fire"></i> Calories</div>
+                <div class="monitor-bar-bg">
+                    <div class="monitor-bar-fill" id="cal-bar" style="width: 0%"></div>
+                </div>
+                <div class="monitor-text"><span id="cal-val">0</span> / <span id="cal-limit">2000</span> kcal</div>
+            </div>
+            <div class="monitor-item">
+                <div class="monitor-label"><i class="fa-solid fa-salt-shaker"></i> Sodium</div>
+                <div class="monitor-bar-bg">
+                    <div class="monitor-bar-fill" id="sodium-bar" style="width: 0%"></div>
+                </div>
+                <div class="monitor-text"><span id="sodium-val">0</span> / <span id="sodium-limit">2300</span> mg</div>
+            </div>
+            <div class="monitor-item">
+                <div class="monitor-label"><i class="fa-solid fa-bacon"></i> Sat. Fat</div>
+                <div class="monitor-bar-bg">
+                    <div class="monitor-bar-fill" id="sat-fat-bar" style="width: 0%"></div>
+                </div>
+                <div class="monitor-text"><span id="sat-fat-val">0</span> / <span id="sat-fat-limit">20</span> g</div>
+            </div>
+            <div class="monitor-item">
+                <div class="monitor-label"><i class="fa-solid fa-triangle-exclamation"></i> Trans Fat</div>
+                <div class="monitor-bar-bg">
+                    <div class="monitor-bar-fill" id="trans-fat-bar" style="width: 0%"></div>
+                </div>
+                <div class="monitor-text"><span id="trans-fat-val">0</span> / <span id="trans-fat-limit">0</span> g
+                </div>
+            </div>
+        </section>
+
+        <!-- Input Area -->
+        <section class="input-area glass-panel">
+            <div class="input-controls">
+                <button id="mic-btn" class="action-btn" title="Voice Input"><i
+                        class="fa-solid fa-microphone"></i></button>
+                <div class="text-input-wrapper">
+                    <input type="text" id="food-input" placeholder="What did you eat? (e.g., 2 eggs)">
+                    <button id="camera-btn" class="icon-btn-small" title="Upload Photo"><i
+                            class="fa-solid fa-camera"></i></button>
+                    <input type="file" id="file-upload" accept="image/*" style="display: none;">
+                </div>
+                <button id="send-btn" class="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+            <div id="voice-status" class="hidden">Listening...</div>
+        </section>
+
+        <!-- History List -->
+        <section class="glass-panel" style="margin-top: 20px;">
+            <h2>Today's Logs</h2>
+            <div id="history-list"
+                style="max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+                <!-- Items injected by JS -->
+                <div style="text-align: center; color: var(--text-secondary);">No logs yet today.</div>
+            </div>
+        </section>
+
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal hidden">
+            <div class="modal-content glass-panel">
+                <div class="modal-header">
+                    <h2>Settings</h2>
+                    <button id="close-settings" class="icon-btn"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+
+                <div class="setting-group" style="margin-bottom: 20px;">
+                    <h3>Nutrition Targets</h3>
+
+                    <div class="setting-item" style="display: block; margin-top: 10px;">
+                        <span style="display: block; margin-bottom: 5px; color: var(--text-secondary);">Calorie
+                            Preset</span>
+                        <select id="calorie-preset"
+                            style="width: 100%; background: rgba(0,0,0,0.3); color: white; border: 1px solid var(--glass-border); padding: 10px; border-radius: 10px; font-family: var(--font-main);">
+                            <option value="custom">Custom</option>
+                            <option value="1000">1000 kcal</option>
+                            <option value="1200">1200 kcal</option>
+                            <option value="1500">1500 kcal</option>
+                            <option value="1800">1800 kcal</option>
+                            <option value="2000" selected>2000 kcal</option>
+                            <option value="2200">2200 kcal</option>
+                            <option value="2500">2500 kcal</option>
+                        </select>
+                    </div>
+
+                    <div class="input-grid"
+                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; margin-top: 10px;">
+                        <div>
+                            <label style="font-size: 0.8rem; color: var(--text-secondary);">Calories</label>
+                            <input type="number" id="target-calories" class="glass-input-small">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.8rem; color: var(--text-secondary);">Carbs (g)</label>
+                            <input type="number" id="target-carbs" class="glass-input-small">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.8rem; color: var(--text-secondary);">Protein (g)</label>
+                            <input type="number" id="target-protein" class="glass-input-small">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.8rem; color: var(--text-secondary);">Fats (g)</label>
+                            <input type="number" id="target-fats" class="glass-input-small">
+                        </div>
+                        <div style="grid-column: span 2;">
+                            <label style="font-size: 0.8rem; color: var(--text-secondary);">Potassium (mg)</label>
+                            <input type="number" id="target-potassium" class="glass-input-small">
+                        </div>
+                    </div>
+
+                    <button id="save-settings-btn" class="action-btn"
+                        style="width: 100%; border-radius: 10px; height: auto; padding: 10px;">Save Targets</button>
+                </div>
+
+                <div class="setting-group" style="padding-top: 20px; border-top: 1px solid var(--glass-border);">
+                    <h3>Health Modes</h3>
+                    <div class="setting-item">
+                        <label>Diabetes Mode</label>
+                        <label class="switch">
+                            <input type="checkbox" id="diabetes-toggle">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>CKD Mode (Kidney)</label>
+                        <label class="switch">
+                            <input type="checkbox" id="ckd-toggle">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="setting-info">
+                        <small>Enabling these modes will automatically adjust your daily limits.</small>
+                    </div>
+                </div>
+            </div>
+            <div class="setting-item"
+                style="margin-top: 20px; border-top: 1px solid var(--glass-border); padding-top: 20px;">
+                <button id="reset-btn" class="action-btn"
+                    style="width: 100%; background: var(--danger-color); border: none;">Reset Today's Data</button>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Add Food Modal -->
+    <div id="add-food-modal" class="modal hidden">
+        <div class="modal-content glass-panel">
+            <div class="modal-header">
+                <h2>Add New Food</h2>
+                <button id="close-add-food" class="icon-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="setting-info" style="margin-bottom: 15px;">
+                I don't recognize this food. Please add its details.
+            </div>
+            <div class="text-input-wrapper" style="margin-bottom: 15px;">
+                <input type="text" id="new-food-name" placeholder="Food Name">
+            </div>
+            <div class="stats-grid" style="grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                <div class="text-input-wrapper">
+                    <input type="number" id="new-carbs" placeholder="Carbs (g)">
+                </div>
+                <div class="text-input-wrapper">
+                    <input type="number" id="new-fats" placeholder="Fats (g)">
+                </div>
+                <div class="text-input-wrapper">
+                    <input type="number" id="new-protein" placeholder="Protein (g)">
+                </div>
+                <div class="text-input-wrapper">
+                    <input type="number" id="new-calories" placeholder="Calories">
+                </div>
+            </div>
+            <button id="save-food-btn" class="send-btn" style="width: 100%; border-radius: 10px;">Save &
+                Log</button>
+        </div>
+    </div>
+
+    </div>
+    </div>
+    </div>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}?v=8"></script>
+</body>
+
+</html>
