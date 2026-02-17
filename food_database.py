@@ -81,6 +81,12 @@ FOOD_DB = {
     'butter': {'carbs': 0.1, 'fats': 81, 'protein': 0.9, 'calories': 717, 'potassium': 24, 'sodium': 11, 'saturated_fat': 51, 'trans_fat': 3, 'gi': 0},
     'cheese': {'carbs': 1.3, 'fats': 33, 'protein': 25, 'calories': 402, 'potassium': 98, 'sodium': 621, 'saturated_fat': 21, 'trans_fat': 1, 'gi': 0}, # Cheddar-ish
     'yogurt': {'carbs': 4.7, 'fats': 3.3, 'protein': 3.5, 'calories': 61, 'potassium': 155, 'sodium': 46, 'saturated_fat': 2, 'trans_fat': 0, 'gi': 35},
+    'mozzarella': {'carbs': 2, 'fats': 22, 'protein': 22, 'calories': 280, 'potassium': 95, 'sodium': 486, 'saturated_fat': 13, 'trans_fat': 0.5, 'gi': 0},
+    'feta': {'carbs': 4, 'fats': 21, 'protein': 14, 'calories': 264, 'potassium': 62, 'sodium': 917, 'saturated_fat': 15, 'trans_fat': 0, 'gi': 0},
+    'parmesan': {'carbs': 4, 'fats': 29, 'protein': 38, 'calories': 431, 'potassium': 125, 'sodium': 1529, 'saturated_fat': 17, 'trans_fat': 0, 'gi': 0},
+    'brie': {'carbs': 0.5, 'fats': 28, 'protein': 21, 'calories': 334, 'potassium': 152, 'sodium': 629, 'saturated_fat': 17, 'trans_fat': 0, 'gi': 0},
+    'cottage cheese': {'carbs': 3, 'fats': 4, 'protein': 11, 'calories': 98, 'potassium': 104, 'sodium': 364, 'saturated_fat': 2, 'trans_fat': 0, 'gi': 10},
+    'cream cheese': {'carbs': 4, 'fats': 34, 'protein': 6, 'calories': 342, 'potassium': 138, 'sodium': 321, 'saturated_fat': 21, 'trans_fat': 1, 'gi': 0},
     
     # Extended Filipino
     'tapa': {'carbs': 5, 'fats': 12, 'protein': 25, 'calories': 230, 'potassium': 300, 'sodium': 800, 'saturated_fat': 5, 'trans_fat': 0, 'gi': 45},
@@ -97,6 +103,14 @@ FOOD_DB = {
     'pineapple': {'carbs': 13, 'fats': 0.1, 'protein': 0.5, 'calories': 50, 'potassium': 109, 'sodium': 1, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 59},
     'watermelon': {'carbs': 8, 'fats': 0.2, 'protein': 0.6, 'calories': 30, 'potassium': 112, 'sodium': 1, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 72},
     'grapes': {'carbs': 18, 'fats': 0.2, 'protein': 0.7, 'calories': 69, 'potassium': 191, 'sodium': 2, 'saturated_fat': 0.1, 'trans_fat': 0, 'gi': 59},
+    'blueberry': {'carbs': 14, 'fats': 0.3, 'protein': 0.7, 'calories': 57, 'potassium': 77, 'sodium': 1, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 53},
+    'blackberry': {'carbs': 10, 'fats': 0.5, 'protein': 1.4, 'calories': 43, 'potassium': 162, 'sodium': 1, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 25},
+    'cranberry': {'carbs': 12, 'fats': 0.1, 'protein': 0.4, 'calories': 46, 'potassium': 85, 'sodium': 2, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 45},
+    'cherry': {'carbs': 16, 'fats': 0.2, 'protein': 1.1, 'calories': 63, 'potassium': 222, 'sodium': 0, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 20},
+    'peach': {'carbs': 10, 'fats': 0.3, 'protein': 0.9, 'calories': 39, 'potassium': 190, 'sodium': 0, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 42},
+    'pear': {'carbs': 15, 'fats': 0.1, 'protein': 0.4, 'calories': 57, 'potassium': 116, 'sodium': 1, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 38},
+    'plum': {'carbs': 11, 'fats': 0.3, 'protein': 0.7, 'calories': 46, 'potassium': 157, 'sodium': 0, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 40},
+    'melon': {'carbs': 8, 'fats': 0.2, 'protein': 0.8, 'calories': 34, 'potassium': 267, 'sodium': 16, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 60}, # Cantaloupe/Honeydew avg
     
     # Drinks
     'coke': {'carbs': 10.6, 'fats': 0, 'protein': 0, 'calories': 42, 'potassium': 0, 'sodium': 4, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 60},
@@ -230,6 +244,11 @@ FOOD_DB = {
     'almonds': {'carbs': 22, 'fats': 49, 'protein': 21, 'calories': 579, 'potassium': 733, 'gi': 15},
     'peanuts': {'carbs': 16, 'fats': 49, 'protein': 26, 'calories': 567, 'potassium': 705, 'gi': 13},
     'cashews': {'carbs': 30, 'fats': 44, 'protein': 18, 'calories': 553, 'potassium': 660, 'gi': 25},
+    'walnut': {'carbs': 14, 'fats': 65, 'protein': 15, 'calories': 654, 'potassium': 441, 'sodium': 2, 'saturated_fat': 6, 'trans_fat': 0, 'gi': 15},
+    'pecan': {'carbs': 14, 'fats': 72, 'protein': 9, 'calories': 691, 'potassium': 410, 'sodium': 0, 'saturated_fat': 6, 'trans_fat': 0, 'gi': 10},
+    'pistachio': {'carbs': 28, 'fats': 45, 'protein': 20, 'calories': 560, 'potassium': 1025, 'sodium': 1, 'saturated_fat': 6, 'trans_fat': 0, 'gi': 15}, # High K!
+    'hazelnut': {'carbs': 17, 'fats': 61, 'protein': 15, 'calories': 628, 'potassium': 680, 'sodium': 0, 'saturated_fat': 4, 'trans_fat': 0, 'gi': 15},
+    'macadamia': {'carbs': 14, 'fats': 76, 'protein': 8, 'calories': 718, 'potassium': 368, 'sodium': 5, 'saturated_fat': 12, 'trans_fat': 0, 'gi': 10},
     
     # Desserts / Snacks
     'chocolate': {'carbs': 61, 'fats': 30, 'protein': 5, 'calories': 546, 'potassium': 372, 'gi': 49}, # Milk chocolate
@@ -264,6 +283,10 @@ def search_food_db(query):
     # 2. Singularize (simple)
     if query.endswith('s') and query[:-1] in FOOD_DB:
         return FOOD_DB[query[:-1]]
+
+    # 3. Plural -ies -> -y (e.g. berries -> berry)
+    if query.endswith('ies') and query[:-3] + 'y' in FOOD_DB:
+        return FOOD_DB[query[:-3] + 'y']
     
     # 3. Fuzzy match (catch typos like 'brocolli')
     matches = difflib.get_close_matches(query, FOOD_DB.keys(), n=1, cutoff=0.7)
