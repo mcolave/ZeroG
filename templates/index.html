@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=9">
 </head>
 
 <body>
@@ -152,10 +152,10 @@
         </section>
 
         <!-- History List -->
-        <section class="glass-panel" style="margin-top: 20px;">
+        <section class="history-section glass-panel" style="margin-top: 20px;">
             <h2>Today's Logs</h2>
             <div id="history-list"
-                style="max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+                style="max-height: 400px; min-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
                 <!-- Items injected by JS -->
                 <div style="text-align: center; color: var(--text-secondary);">No logs yet today.</div>
             </div>
@@ -284,7 +284,7 @@
 
     </div>
 
-    <script src="{{ url_for('static', filename='script.js') }}?v=8"></script>
+    <script src="{{ url_for('static', filename='script.js') }}?v=9"></script>
 </body>
 
 </html>

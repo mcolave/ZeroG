@@ -1,7 +1,9 @@
 import sqlite3
 import datetime
 
-DB_NAME = "zerog.db"
+import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_NAME = os.path.join(BASE_DIR, "zerog.db")
 
 def init_db():
     conn = sqlite3.connect(DB_NAME)
@@ -44,6 +46,13 @@ def init_db():
         target_sodium REAL DEFAULT 2300,
         target_saturated_fat REAL DEFAULT 20,
         target_trans_fat REAL DEFAULT 0
+    )''')
+    
+    # Missing Foods Table (For learning)
+    c.execute('''CREATE TABLE IF NOT EXISTS missing_foods (
+        term TEXT PRIMARY KEY,
+        count INTEGER DEFAULT 1,
+        last_searched TEXT
     )''')
     
     for col, default in [('target_sodium', 2300), ('target_saturated_fat', 20), ('target_trans_fat', 0)]:

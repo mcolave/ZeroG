@@ -245,8 +245,11 @@ document.addEventListener('DOMContentLoaded', () => {
             div.style.cursor = 'help'; // Indicate hoverable
 
             // Add detailed info on hover
-            const details = `Calories: ${Math.round(item.calories)}\nCarbs: ${Math.round(item.carbs)}g\nProtein: ${Math.round(item.protein)}g\nFats: ${Math.round(item.fats)}g\nPotassium: ${Math.round(item.potassium)}mg`;
+            const details = `Calories: ${Math.round(item.calories)}\nCarbs: ${Math.round(item.carbs)}g\nProtein: ${Math.round(item.protein)}g\nFats: ${Math.round(item.fats)}g\nSodium: ${Math.round(item.sodium || 0)}mg\nPotassium: ${Math.round(item.potassium)}mg\nGI: ${item.gi || 0}`;
             div.title = details;
+
+            let giHtml = ` • <span style="color: var(--text-secondary);">GI: ${Math.round(item.gi || 0)}</span>`;
+            let naHtml = ` • <span style="color: var(--text-secondary);">Na: ${Math.round(item.sodium || 0)}</span>`;
 
             div.innerHTML = `
                 <div>
@@ -259,6 +262,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span style="color: #00d2ff;">${Math.round(item.carbs)}g C</span> • 
                     <span style="color: #9d50bb;">${Math.round(item.protein)}g P</span> • 
                     <span style="color: #3a7bd5;">${Math.round(item.fats)}g F</span>
+                    ${naHtml}
+                    ${giHtml}
                 </div>
             `;
             listEl.appendChild(div);

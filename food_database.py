@@ -11,33 +11,34 @@ FOOD_DB = {
     'carrot': {'carbs': 10, 'fats': 0.2, 'protein': 0.9, 'calories': 41, 'potassium': 320, 'sodium': 69, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 39},
     'radish': {'carbs': 3.4, 'fats': 0.1, 'protein': 0.7, 'calories': 16, 'potassium': 233, 'sodium': 39, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 15},
     'white radish': {'carbs': 4.1, 'fats': 0.1, 'protein': 0.6, 'calories': 18, 'potassium': 227, 'sodium': 21, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 15},
+    'white radish': {'carbs': 4.1, 'fats': 0.1, 'protein': 0.6, 'calories': 18, 'potassium': 227, 'sodium': 21, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 15},
     'white raddish': {'carbs': 4.1, 'fats': 0.1, 'protein': 0.6, 'calories': 18, 'potassium': 227, 'sodium': 21, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 15}, # Typo handling
-    'daikon': {'carbs': 4.1, 'fats': 0.1, 'protein': 0.6, 'calories': 18, 'potassium': 227},
-    'lettuce': {'carbs': 2.9, 'fats': 0.2, 'protein': 1.4, 'calories': 15, 'potassium': 194},
-    'cucumber': {'carbs': 3.6, 'fats': 0.1, 'protein': 0.7, 'calories': 15, 'potassium': 147},
-    'tomato': {'carbs': 3.9, 'fats': 0.2, 'protein': 0.9, 'calories': 18, 'potassium': 237},
-    'potato': {'carbs': 17, 'fats': 0.1, 'protein': 2, 'calories': 77, 'potassium': 421},
-    'garlic': {'carbs': 33, 'fats': 0.5, 'protein': 6.4, 'calories': 149, 'potassium': 401},
-    'onion': {'carbs': 9, 'fats': 0.1, 'protein': 1.1, 'calories': 40, 'potassium': 146},
+    'daikon': {'carbs': 4.1, 'fats': 0.1, 'protein': 0.6, 'calories': 18, 'potassium': 227, 'gi': 15},
+    'lettuce': {'carbs': 2.9, 'fats': 0.2, 'protein': 1.4, 'calories': 15, 'potassium': 194, 'gi': 15},
+    'cucumber': {'carbs': 3.6, 'fats': 0.1, 'protein': 0.7, 'calories': 15, 'potassium': 147, 'gi': 15},
+    'tomato': {'carbs': 3.9, 'fats': 0.2, 'protein': 0.9, 'calories': 18, 'potassium': 237, 'gi': 15},
+    'potato': {'carbs': 17, 'fats': 0.1, 'protein': 2, 'calories': 77, 'potassium': 421, 'gi': 78},
+    'garlic': {'carbs': 33, 'fats': 0.5, 'protein': 6.4, 'calories': 149, 'potassium': 401, 'gi': 10},
+    'onion': {'carbs': 9, 'fats': 0.1, 'protein': 1.1, 'calories': 40, 'potassium': 146, 'gi': 10},
     
-    'rice': {'carbs': 28, 'fats': 0.3, 'protein': 2.7, 'calories': 130, 'potassium': 35},
-    'white rice': {'carbs': 28, 'fats': 0.3, 'protein': 2.7, 'calories': 130, 'potassium': 35},
-    'brown rice': {'carbs': 23, 'fats': 0.9, 'protein': 2.6, 'calories': 111, 'potassium': 43},
-    'pearl barley': {'carbs': 28, 'fats': 0.4, 'protein': 2.3, 'calories': 123, 'potassium': 93},
-    'barley': {'carbs': 28, 'fats': 0.4, 'protein': 2.3, 'calories': 123, 'potassium': 93},
-    'quinoa': {'carbs': 21, 'fats': 1.9, 'protein': 4.4, 'calories': 120, 'potassium': 172},
-    'oats': {'carbs': 12, 'fats': 1.4, 'protein': 2.4, 'calories': 68, 'potassium': 80}, # Porridge/cooked
+    'rice': {'carbs': 28, 'fats': 0.3, 'protein': 2.7, 'calories': 130, 'potassium': 35, 'gi': 73},
+    'white rice': {'carbs': 28, 'fats': 0.3, 'protein': 2.7, 'calories': 130, 'potassium': 35, 'gi': 73},
+    'brown rice': {'carbs': 23, 'fats': 0.9, 'protein': 2.6, 'calories': 111, 'potassium': 43, 'gi': 68},
+    'pearl barley': {'carbs': 28, 'fats': 0.4, 'protein': 2.3, 'calories': 123, 'potassium': 93, 'gi': 28},
+    'barley': {'carbs': 28, 'fats': 0.4, 'protein': 2.3, 'calories': 123, 'potassium': 93, 'gi': 28},
+    'quinoa': {'carbs': 21, 'fats': 1.9, 'protein': 4.4, 'calories': 120, 'potassium': 172, 'gi': 53},
+    'oats': {'carbs': 12, 'fats': 1.4, 'protein': 2.4, 'calories': 68, 'potassium': 80, 'gi': 55}, # Porridge/cooked
     
     # Proteins
-    'egg': {'carbs': 1.1, 'fats': 11, 'protein': 13, 'calories': 155, 'potassium': 126},
-    'boiled egg': {'carbs': 1.1, 'fats': 11, 'protein': 13, 'calories': 155, 'potassium': 126},
-    'fried egg': {'carbs': 0.8, 'fats': 15, 'protein': 14, 'calories': 196, 'potassium': 132},
-    'chicken': {'carbs': 0, 'fats': 3.6, 'protein': 31, 'calories': 165, 'potassium': 256},
-    'chicken breast': {'carbs': 0, 'fats': 3.6, 'protein': 31, 'calories': 165, 'potassium': 256},
-    'pork': {'carbs': 0, 'fats': 14, 'protein': 27, 'calories': 242, 'potassium': 423},
-    'beef': {'carbs': 0, 'fats': 15, 'protein': 26, 'calories': 250, 'potassium': 318},
-    'fish': {'carbs': 0, 'fats': 12, 'protein': 20, 'calories': 206, 'potassium': 384},
-    'salmon': {'carbs': 0, 'fats': 13, 'protein': 20, 'calories': 208, 'potassium': 363},
+    'egg': {'carbs': 1.1, 'fats': 11, 'protein': 13, 'calories': 155, 'potassium': 126, 'gi': 0},
+    'boiled egg': {'carbs': 1.1, 'fats': 11, 'protein': 13, 'calories': 155, 'potassium': 126, 'gi': 0},
+    'fried egg': {'carbs': 0.8, 'fats': 15, 'protein': 14, 'calories': 196, 'potassium': 132, 'gi': 0},
+    'chicken': {'carbs': 0, 'fats': 3.6, 'protein': 31, 'calories': 165, 'potassium': 256, 'gi': 0},
+    'chicken breast': {'carbs': 0, 'fats': 3.6, 'protein': 31, 'calories': 165, 'potassium': 256, 'gi': 0},
+    'pork': {'carbs': 0, 'fats': 14, 'protein': 27, 'calories': 242, 'potassium': 423, 'gi': 0},
+    'beef': {'carbs': 0, 'fats': 15, 'protein': 26, 'calories': 250, 'potassium': 318, 'gi': 0},
+    'fish': {'carbs': 0, 'fats': 12, 'protein': 20, 'calories': 206, 'potassium': 384, 'gi': 0},
+    'salmon': {'carbs': 0, 'fats': 13, 'protein': 20, 'calories': 208, 'potassium': 363, 'gi': 0},
     
     # Filipino / Asian Common
     'lechon': {'carbs': 0, 'fats': 25, 'protein': 27, 'calories': 350, 'potassium': 300, 'sodium': 510, 'saturated_fat': 11, 'trans_fat': 0, 'gi': 0},
@@ -48,11 +49,11 @@ FOOD_DB = {
     'pancit': {'carbs': 35, 'fats': 8, 'protein': 10, 'calories': 250, 'potassium': 100, 'sodium': 700, 'saturated_fat': 2, 'trans_fat': 0, 'gi': 45},
     
     # Common Snacks/Others
-    'bread': {'carbs': 49, 'fats': 3.2, 'protein': 9, 'calories': 265, 'potassium': 115},
-    'white bread': {'carbs': 49, 'fats': 3.2, 'protein': 9, 'calories': 265, 'potassium': 115},
-    'whole wheat bread': {'carbs': 41, 'fats': 3.5, 'protein': 13, 'calories': 247, 'potassium': 250},
-    'low gi bread': {'carbs': 40, 'fats': 4, 'protein': 12, 'calories': 240, 'potassium': 200},
-    'multigrain bread': {'carbs': 43, 'fats': 4.2, 'protein': 13, 'calories': 265, 'potassium': 220},
+    'bread': {'carbs': 49, 'fats': 3.2, 'protein': 9, 'calories': 265, 'potassium': 115, 'gi': 75},
+    'white bread': {'carbs': 49, 'fats': 3.2, 'protein': 9, 'calories': 265, 'potassium': 115, 'gi': 75},
+    'whole wheat bread': {'carbs': 41, 'fats': 3.5, 'protein': 13, 'calories': 247, 'potassium': 250, 'gi': 74},
+    'low gi bread': {'carbs': 40, 'fats': 4, 'protein': 12, 'calories': 240, 'potassium': 200, 'gi': 53},
+    'multigrain bread': {'carbs': 43, 'fats': 4.2, 'protein': 13, 'calories': 265, 'potassium': 220, 'gi': 45},
     
     'milk': {'carbs': 5, 'fats': 3.2, 'protein': 3.4, 'calories': 60, 'potassium': 150, 'sodium': 44, 'saturated_fat': 1.9, 'trans_fat': 0.1, 'gi': 31},
     'coffee': {'carbs': 0, 'fats': 0, 'protein': 0.1, 'calories': 1, 'potassium': 49, 'sodium': 2, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 0},
@@ -82,11 +83,11 @@ FOOD_DB = {
     'yogurt': {'carbs': 4.7, 'fats': 3.3, 'protein': 3.5, 'calories': 61, 'potassium': 155, 'sodium': 46, 'saturated_fat': 2, 'trans_fat': 0, 'gi': 35},
     
     # Extended Filipino
-    'tapa': {'carbs': 5, 'fats': 12, 'protein': 25, 'calories': 230, 'potassium': 300, 'sodium': 800, 'saturated_fat': 5, 'trans_fat': 0, 'gi': 0},
+    'tapa': {'carbs': 5, 'fats': 12, 'protein': 25, 'calories': 230, 'potassium': 300, 'sodium': 800, 'saturated_fat': 5, 'trans_fat': 0, 'gi': 45},
     'longganisa': {'carbs': 10, 'fats': 25, 'protein': 12, 'calories': 320, 'potassium': 200, 'sodium': 900, 'saturated_fat': 10, 'trans_fat': 0, 'gi': 50},
     'tocino': {'carbs': 15, 'fats': 20, 'protein': 10, 'calories': 280, 'potassium': 150, 'sodium': 600, 'saturated_fat': 7, 'trans_fat': 0, 'gi': 60},
     'pandesal': {'carbs': 55, 'fats': 5, 'protein': 10, 'calories': 300, 'potassium': 100, 'sodium': 400, 'saturated_fat': 2, 'trans_fat': 0, 'gi': 70},
-    'kare-kare': {'carbs': 8, 'fats': 15, 'protein': 18, 'calories': 240, 'potassium': 300, 'sodium': 500, 'saturated_fat': 4, 'trans_fat': 0, 'gi': 0},
+    'kare-kare': {'carbs': 8, 'fats': 15, 'protein': 18, 'calories': 240, 'potassium': 300, 'sodium': 500, 'saturated_fat': 4, 'trans_fat': 0, 'gi': 35},
     'lumpia': {'carbs': 20, 'fats': 15, 'protein': 8, 'calories': 250, 'potassium': 150, 'sodium': 400, 'saturated_fat': 3, 'trans_fat': 0, 'gi': 60}, # Fried spring roll
     'champorado': {'carbs': 40, 'fats': 2, 'protein': 4, 'calories': 200, 'potassium': 150, 'sodium': 20, 'saturated_fat': 1, 'trans_fat': 0, 'gi': 70},
     
@@ -162,6 +163,12 @@ FOOD_DB = {
     'wine': {'carbs': 3.8, 'fats': 0, 'protein': 0.1, 'calories': 125, 'potassium': 100, 'sodium': 5, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 0},
     'diet coke': {'carbs': 0, 'fats': 0, 'protein': 0, 'calories': 0, 'potassium': 0, 'sodium': 10, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 0},
     'coke zero': {'carbs': 0, 'fats': 0, 'protein': 0, 'calories': 0, 'potassium': 0, 'sodium': 10, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 0},
+    'coke light': {'carbs': 0, 'fats': 0, 'protein': 0, 'calories': 0, 'potassium': 0, 'sodium': 10, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 0},
+    'pepsi zero': {'carbs': 0, 'fats': 0, 'protein': 0, 'calories': 0, 'potassium': 0, 'sodium': 10, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 0},
+    'pepsi max': {'carbs': 0, 'fats': 0, 'protein': 0, 'calories': 0, 'potassium': 0, 'sodium': 10, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 0},
+    'pepsi light': {'carbs': 0, 'fats': 0, 'protein': 0, 'calories': 0, 'potassium': 0, 'sodium': 10, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 0},
+    'sprite zero': {'carbs': 0, 'fats': 0, 'protein': 0, 'calories': 0, 'potassium': 0, 'sodium': 10, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 0},
+    '7up free': {'carbs': 0, 'fats': 0, 'protein': 0, 'calories': 0, 'potassium': 0, 'sodium': 10, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 0},
     'water': {'carbs': 0, 'fats': 0, 'protein': 0, 'calories': 0, 'potassium': 0, 'sodium': 0, 'saturated_fat': 0, 'trans_fat': 0, 'gi': 0},
 
     # Canned / Preserved
@@ -185,6 +192,64 @@ FOOD_DB = {
     'frozen pizza': {'carbs': 30, 'fats': 12, 'protein': 12, 'calories': 280, 'potassium': 150, 'sodium': 600, 'saturated_fat': 5, 'trans_fat': 0.3, 'gi': 60}, # Per slice
     'fish finger': {'carbs': 20, 'fats': 12, 'protein': 12, 'calories': 240, 'potassium': 200, 'sodium': 400, 'saturated_fat': 2, 'trans_fat': 0, 'gi': 60},
     'nuggets': {'carbs': 20, 'fats': 18, 'protein': 16, 'calories': 300, 'potassium': 250, 'sodium': 500, 'saturated_fat': 4, 'trans_fat': 0.1, 'gi': 60},
+    
+    # More Filipino / Asian
+    'tinola': {'carbs': 5, 'fats': 8, 'protein': 25, 'calories': 200, 'potassium': 300, 'sodium': 600, 'saturated_fat': 2, 'trans_fat': 0, 'gi': 0},
+    'nilaga': {'carbs': 8, 'fats': 15, 'protein': 25, 'calories': 280, 'potassium': 350, 'sodium': 700, 'saturated_fat': 6, 'trans_fat': 0, 'gi': 0},
+    'afritada': {'carbs': 12, 'fats': 15, 'protein': 20, 'calories': 260, 'potassium': 300, 'sodium': 600, 'saturated_fat': 5, 'trans_fat': 0, 'gi': 45}, # Tomato sauce
+    'menudo': {'carbs': 10, 'fats': 18, 'protein': 22, 'calories': 300, 'potassium': 350, 'sodium': 650, 'saturated_fat': 6, 'trans_fat': 0, 'gi': 45},
+    'caldereta': {'carbs': 12, 'fats': 20, 'protein': 25, 'calories': 350, 'potassium': 400, 'sodium': 700, 'saturated_fat': 8, 'trans_fat': 0.5, 'gi': 45},
+    'paksiw': {'carbs': 5, 'fats': 10, 'protein': 20, 'calories': 200, 'potassium': 250, 'sodium': 500, 'saturated_fat': 3, 'trans_fat': 0, 'gi': 0},
+    'bicol express': {'carbs': 8, 'fats': 25, 'protein': 18, 'calories': 350, 'potassium': 300, 'sodium': 600, 'saturated_fat': 12, 'trans_fat': 0, 'gi': 0}, # Coconut milk
+    'laing': {'carbs': 10, 'fats': 20, 'protein': 5, 'calories': 250, 'potassium': 400, 'sodium': 500, 'saturated_fat': 10, 'trans_fat': 0, 'gi': 15},
+    'pinakbet': {'carbs': 15, 'fats': 8, 'protein': 6, 'calories': 160, 'potassium': 350, 'sodium': 600, 'saturated_fat': 2, 'trans_fat': 0, 'gi': 40},
+    'tortang talong': {'carbs': 8, 'fats': 15, 'protein': 10, 'calories': 210, 'potassium': 250, 'sodium': 400, 'saturated_fat': 3, 'trans_fat': 0, 'gi': 15},
+    'lugaw': {'carbs': 30, 'fats': 5, 'protein': 8, 'calories': 200, 'potassium': 100, 'sodium': 500, 'saturated_fat': 1, 'trans_fat': 0, 'gi': 70}, # Rice porridge
+    'arroz caldo': {'carbs': 30, 'fats': 8, 'protein': 15, 'calories': 250, 'potassium': 150, 'sodium': 600, 'saturated_fat': 2, 'trans_fat': 0, 'gi': 70},
+    'turon': {'carbs': 35, 'fats': 10, 'protein': 2, 'calories': 240, 'potassium': 150, 'sodium': 50, 'saturated_fat': 3, 'trans_fat': 0, 'gi': 65},
+    'halo-halo': {'carbs': 60, 'fats': 8, 'protein': 6, 'calories': 350, 'potassium': 200, 'sodium': 100, 'saturated_fat': 4, 'trans_fat': 0, 'gi': 70},
+
+    # Common Variations
+    'steak': {'carbs': 0, 'fats': 20, 'protein': 25, 'calories': 280, 'potassium': 350, 'sodium': 60, 'saturated_fat': 8, 'trans_fat': 1, 'gi': 0},
+    'roast chicken': {'carbs': 0, 'fats': 12, 'protein': 28, 'calories': 220, 'potassium': 250, 'sodium': 300, 'saturated_fat': 3, 'trans_fat': 0, 'gi': 0},
+    'grilled fish': {'carbs': 0, 'fats': 8, 'protein': 22, 'calories': 160, 'potassium': 350, 'sodium': 200, 'saturated_fat': 1, 'trans_fat': 0, 'gi': 0},
+    'salad': {'carbs': 5, 'fats': 10, 'protein': 2, 'calories': 120, 'potassium': 200, 'sodium': 150, 'saturated_fat': 1, 'trans_fat': 0, 'gi': 20}, # Garden salad w/ dressing
+    'caesar salad': {'carbs': 10, 'fats': 25, 'protein': 8, 'calories': 300, 'potassium': 250, 'sodium': 500, 'saturated_fat': 5, 'trans_fat': 0, 'gi': 25},
+    'soup': {'carbs': 10, 'fats': 2, 'protein': 4, 'calories': 80, 'potassium': 150, 'sodium': 600, 'saturated_fat': 0.5, 'trans_fat': 0, 'gi': 40}, # Generic clear soup
+    'mushroom soup': {'carbs': 12, 'fats': 10, 'protein': 4, 'calories': 150, 'potassium': 200, 'sodium': 700, 'saturated_fat': 5, 'trans_fat': 0, 'gi': 45}, # Creamy
+    'tomato soup': {'carbs': 15, 'fats': 4, 'protein': 2, 'calories': 100, 'potassium': 300, 'sodium': 600, 'saturated_fat': 1, 'trans_fat': 0, 'gi': 45},
+
+    # More Fruits/Veg/Nuts
+    'strawberry': {'carbs': 8, 'fats': 0.3, 'protein': 0.7, 'calories': 32, 'potassium': 153, 'gi': 40},
+    'blueberry': {'carbs': 14, 'fats': 0.3, 'protein': 0.7, 'calories': 57, 'potassium': 77, 'gi': 53},
+    'raspberry': {'carbs': 12, 'fats': 0.7, 'protein': 1.2, 'calories': 52, 'potassium': 151, 'gi': 26}, # Low GI!
+    'avocado': {'carbs': 9, 'fats': 15, 'protein': 2, 'calories': 160, 'potassium': 485, 'gi': 15},
+    'cabbage': {'carbs': 6, 'fats': 0.1, 'protein': 1.3, 'calories': 25, 'potassium': 170, 'gi': 15},
+    'kale': {'carbs': 9, 'fats': 0.9, 'protein': 4.3, 'calories': 49, 'potassium': 491, 'gi': 15},
+    'cauliflower': {'carbs': 5, 'fats': 0.3, 'protein': 1.9, 'calories': 25, 'potassium': 299, 'gi': 15},
+    'almonds': {'carbs': 22, 'fats': 49, 'protein': 21, 'calories': 579, 'potassium': 733, 'gi': 15},
+    'peanuts': {'carbs': 16, 'fats': 49, 'protein': 26, 'calories': 567, 'potassium': 705, 'gi': 13},
+    'cashews': {'carbs': 30, 'fats': 44, 'protein': 18, 'calories': 553, 'potassium': 660, 'gi': 25},
+    
+    # Desserts / Snacks
+    'chocolate': {'carbs': 61, 'fats': 30, 'protein': 5, 'calories': 546, 'potassium': 372, 'gi': 49}, # Milk chocolate
+    'dark chocolate': {'carbs': 46, 'fats': 43, 'protein': 8, 'calories': 598, 'potassium': 715, 'gi': 23},
+    'cake': {'carbs': 50, 'fats': 15, 'protein': 4, 'calories': 350, 'potassium': 100, 'gi': 70}, # Sponge/Generic
+    'cookie': {'carbs': 65, 'fats': 24, 'protein': 5, 'calories': 500, 'potassium': 100, 'gi': 75},
+    'ice cream': {'carbs': 24, 'fats': 11, 'protein': 4, 'calories': 207, 'potassium': 199, 'gi': 60},
+
+    "patatim": {
+        "name": "patatim",
+        "calories": 122,
+        "carbs": 22.97,
+        "protein": 2.7,
+        "fats": 2.7,
+        "potassium": 0,
+        "sodium": 1135.0,
+        "saturated_fat": 1.35,
+        "trans_fat": 0,
+        "gi": 0
+    },
 }
 
 import difflib

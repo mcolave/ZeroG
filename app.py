@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, jsonify
 from database import init_db, get_db_connection
 import datetime
 import os
+import time
+import requests # Ensure it's available
 
 app = Flask(__name__)
 
@@ -18,6 +20,8 @@ from food_database import search_food_db
 def log_entry():
     data = request.json
     text = data.get('text', '').lower()
+    
+    print(f"DEBUG: Processing log entry for text: '{text}'")
     
     conn = get_db_connection()
     c = conn.cursor()
@@ -41,6 +45,7 @@ def log_entry():
     # We will try to match against known DB foods first
     
     known_foods = c.execute('SELECT * FROM foods').fetchall()
+    print(f"DEBUG: Loaded {len(known_foods)} local foods.")
     found_food = None
     
     import re
@@ -52,10 +57,12 @@ def log_entry():
         if re.search(r'\b' + re.escape(food['name']) + r'\b', text):
             found_food = dict(food)
             found_food['source'] = 'local'
+            print(f"DEBUG: Found in local DB: {found_food['name']}")
             break
             
     # 2. If not in local DB, search "Online" (Simulated + Fuzzy + Real API)
     if not found_food:
+        print("DEBUG: Not found in local DB, trying internal cloud/API...")
         # A. Check Internal "Cloud" DB (Fast, reliable)
         # First, try to extract just the food name. This is crucial for fuzzy matching.
         # Remove numbers: "100"
@@ -65,7 +72,7 @@ def log_entry():
         # Regex to remove quantity+unit pattern
         # Handles "100g", "100 grams", "2 slices", "slices of", "slices"
         # Number is now optional: (\d+(?:\.\d+)?)?\s*
-        clean_text = re.sub(r'(\d+(?:\.\d+)?)?\s*(grams|gram|g|ounces|ounce|oz|lbs|pounds|pieces|pcs|slices|slice)\b', '', text, flags=re.IGNORECASE)
+        clean_text = re.sub(r'(\d+(?:\.\d+)?)?\s*(grams|gram|g|ounces|ounce|oz|lbs|pounds|pieces|pcs|slices|slice|ml|milliliters|milliliter|liter|l)\b', '', text, flags=re.IGNORECASE)
         # Remove "of" if it remains at the start (e.g. " of salt")
         clean_text = re.sub(r'^\s*\b(of|in|with)\b\s*', '', clean_text, flags=re.IGNORECASE)
         clean_text = re.sub(r'\s+', ' ', clean_text).strip() # Collapse spaces
@@ -91,17 +98,26 @@ def log_entry():
             try:
                 import requests
                 # Clean text using the SAME robust regex as above
-                search_term = re.sub(r'(\d+(?:\.\d+)?)?\s*(grams|gram|g|ounces|ounce|oz|lbs|pounds|pieces|pcs|slices|slice)\b', '', text, flags=re.IGNORECASE)
+                search_term = re.sub(r'(\d+(?:\.\d+)?)?\s*(grams|gram|g|ounces|ounce|oz|lbs|pounds|pieces|pcs|slices|slice|ml|milliliters|milliliter|liter|l)\b', '', text, flags=re.IGNORECASE)
                 search_term = re.sub(r'^\s*\b(of|in|with)\b\s*', '', search_term, flags=re.IGNORECASE)
                 search_term = re.sub(r'\s+', ' ', search_term).strip()
                 
                 if search_term:
+                    print(f"DEBUG: Searching OpenFoodFacts for: '{search_term}'")
                     # User-Agent is polite to set
                     headers = {'User-Agent': 'ZeroG_Nutrition_App/1.0'}
                     url = f"https://world.openfoodfacts.org/cgi/search.pl?search_terms={search_term}&search_simple=1&action=process&json=1"
-                    r = requests.get(url, headers=headers, timeout=5) # Increased timeout
-                    
-                    if r.status_code == 200:
+                    try:
+                        r = requests.get(url, headers=headers, timeout=3) # Reduced to 3s to prevent hanging
+                        print(f"DEBUG: OpenFoodFacts status: {r.status_code}")
+                    except requests.exceptions.Timeout:
+                        print("DEBUG: OpenFoodFacts timed out.")
+                        r = None
+                    except Exception as e:
+                         print(f"DEBUG: OpenFoodFacts request failed: {e}")
+                         r = None
+
+                    if r and r.status_code == 200:
                         res = r.json()
                         products = res.get('products', [])
                         
@@ -152,6 +168,20 @@ def log_entry():
                  pass
 
     if not found_food:
+        # Log to missing_foods table
+        try:
+             # Use the sanitized search_term if available, else text
+             term_to_log = locals().get('search_term', text).lower().strip()
+             if term_to_log:
+                 c.execute('''INSERT INTO missing_foods (term, count, last_searched) 
+                              VALUES (?, 1, ?) 
+                              ON CONFLICT(term) DO UPDATE SET count = count + 1, last_searched = ?''', 
+                           (term_to_log, datetime.datetime.now().isoformat(), datetime.datetime.now().isoformat()))
+                 conn.commit()
+                 print(f"DEBUG: Logged '{term_to_log}' to missing_foods.")
+        except Exception as e:
+             print(f"DEBUG: Failed to log missing food: {e}")
+
         # Fallback for truly unknown
         conn.close()
         return jsonify({
@@ -164,18 +194,31 @@ def log_entry():
     # Calculate multipliers (very basic)
     # If "2 eggs", multiplier = 2. Default = 1.
     multiplier = 1
-    match = re.search(r'(\d+)', text)
+    match = re.search(r'(\d+(?:\.\d+)?)', text) # Allow decimals
     if match:
         val = float(match.group(1))
-        # Heuristic: If "grams" or "g" is present immediately after number (100g) or with space (100 g)
+        # Heuristic: If "grams" or "ml" is present immediately after number
         # Check for unit presence using regex that allows optional space
-        is_gram_input = re.search(r'(\d+)\s*(grams|gram|g)\b', text, flags=re.IGNORECASE)
+        # Added: ml, milliliter, l, liter, fluid ounce, fl oz
+        # Also kg, kilogram
+        regex = r'(\d+(?:\.\d+)?)\s*(grams|gram|g|kgs|kg|kilograms|kilogram|ml|milliliters|milliliter|liters|liter|l)\b'
+        match_unit = re.search(regex, text, flags=re.IGNORECASE)
         
-        if is_gram_input:
-             # Always treat "grams" as part of 100g base
-             # "100g" -> 1.0
-             # "1g" -> 0.01
-             multiplier = val / 100.0
+        if match_unit:
+             val = float(match_unit.group(1)) # Use the value attached to the unit
+             unit = match_unit.group(2).lower()
+             
+             if unit in ['l', 'liter', 'liters']:
+                 # 1 L = 1000ml = 10 units (of 100ml)
+                 multiplier = val * 10
+             elif unit in ['kg', 'kgs', 'kilogram', 'kilograms']:
+                 # 1 kg = 1000g = 10 units (of 100g)
+                 multiplier = val * 10
+             else:
+                 # Grams, ml -> divide by 100
+                 # "100g" -> 1.0
+                 # "500ml" -> 5.0
+                 multiplier = val / 100.0
         else:
              multiplier = val
         

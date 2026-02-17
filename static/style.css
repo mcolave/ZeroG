@@ -68,6 +68,7 @@ body {
     font-weight: 700;
     background: linear-gradient(to right, #00d2ff, #9d50bb);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -445,7 +446,8 @@ input:checked+.slider:before {
         grid-template-areas:
             "header header"
             "dashboard monitor"
-            "input input";
+            "input input"
+            "history history";
         align-items: start;
         /* Prevents stretching */
     }
@@ -469,6 +471,11 @@ input:checked+.slider:before {
 
     .input-area {
         grid-area: input;
+        width: 100%;
+    }
+
+    .history-section {
+        grid-area: history;
         width: 100%;
     }
 }
