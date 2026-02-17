@@ -7,8 +7,15 @@ import requests # Ensure it's available
 
 app = Flask(__name__)
 
+print("DEBUG: App initializing...")
 # Initialize DB on startup
-init_db()
+try:
+    print("DEBUG: Calling init_db()...")
+    init_db()
+    print("DEBUG: init_db() completed.")
+except Exception as e:
+    print(f"CRITICAL: init_db failed: {e}")
+
 
 @app.route('/')
 def index():
