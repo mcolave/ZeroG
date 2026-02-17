@@ -55,7 +55,7 @@ def log_entry():
             
             # Use 'search_food_db' from food_database.py (Simulated "Online")
             # Cleaning logic
-            clean_text = re.sub(r'(\d+(?:\.\d+)?)?\s*(grams|gram|g|ounces|ounce|oz|lbs|pounds|pieces|pcs|slices|slice|ml|milliliters|milliliter|liter|l)\b', '', text, flags=re.IGNORECASE)
+            clean_text = re.sub(r'(\d+(?:\.\d+)?)?\s*(grams|gram|g|ounces|ounce|oz|lbs|pounds|pieces|pcs|slices|slice|ml|milliliters|milliliter|liter|l|cup|cups)\b', '', text, flags=re.IGNORECASE)
             clean_text = re.sub(r'^\s*\b(of|in|with)\b\s*', '', clean_text, flags=re.IGNORECASE)
             clean_text = re.sub(r'\b\d+(\.\d+)?\b', '', clean_text)
             clean_text = re.sub(r'\s+', ' ', clean_text).strip()
@@ -79,7 +79,7 @@ def log_entry():
             if not found_food:
                 try:
                     import requests
-                    search_term = re.sub(r'(\d+(?:\.\d+)?)?\s*(grams|gram|g|ounces|ounce|oz|lbs|pounds|pieces|pcs|slices|slice|ml|milliliters|milliliter|liter|l)\b', '', text, flags=re.IGNORECASE)
+                    search_term = re.sub(r'(\d+(?:\.\d+)?)?\s*(grams|gram|g|ounces|ounce|oz|lbs|pounds|pieces|pcs|slices|slice|ml|milliliters|milliliter|liter|l|cup|cups)\b', '', text, flags=re.IGNORECASE)
                     search_term = re.sub(r'^\s*\b(of|in|with)\b\s*', '', search_term, flags=re.IGNORECASE)
                     search_term = re.sub(r'\b\d+(\.\d+)?\b', '', search_term)
                     search_term = re.sub(r'\s+', ' ', search_term).strip()
@@ -102,20 +102,31 @@ def log_entry():
                         if r and r.status_code == 200:
                             res = r.json()
                             products = res.get('products', [])
+                            
+                            # Helper to safely float cast
+                            def to_float(val):
+                                try:
+                                    if val is None: return 0.0
+                                    return float(val)
+                                except (ValueError, TypeError):
+                                    return 0.0
+
                             for product in products[:5]:
                                 nutriments = product.get('nutriments', {})
-                                cal = nutriments.get('energy-kcal_100g', 0)
-                                if cal > 0 or nutriments.get('sodium_100g', 0) > 0.1 or nutriments.get('carbohydrates_100g', 0) > 0 or nutriments.get('fat_100g', 0) > 0 or nutriments.get('proteins_100g', 0) > 0:
+                                cal = to_float(nutriments.get('energy-kcal_100g', 0))
+                                
+                                # Only accept if it has valid data
+                                if cal > 0 or to_float(nutriments.get('sodium_100g', 0)) > 0.1 or to_float(nutriments.get('carbohydrates_100g', 0)) > 0:
                                     found_food = {
                                         'name': search_term, 
-                                        'carbs': nutriments.get('carbohydrates_100g', 0),
-                                        'fats': nutriments.get('fat_100g', 0),
-                                        'protein': nutriments.get('proteins_100g', 0),
+                                        'carbs': to_float(nutriments.get('carbohydrates_100g', 0)),
+                                        'fats': to_float(nutriments.get('fat_100g', 0)),
+                                        'protein': to_float(nutriments.get('proteins_100g', 0)),
                                         'calories': cal,
-                                        'potassium': nutriments.get('potassium_100g', 0),
-                                        'sodium': nutriments.get('sodium_100g', 0) * 1000,
-                                        'saturated_fat': nutriments.get('saturated-fat_100g', 0),
-                                        'trans_fat': nutriments.get('trans-fat_100g', 0),
+                                        'potassium': to_float(nutriments.get('potassium_100g', 0)),
+                                        'sodium': to_float(nutriments.get('sodium_100g', 0)) * 1000,
+                                        'saturated_fat': to_float(nutriments.get('saturated-fat_100g', 0)),
+                                        'trans_fat': to_float(nutriments.get('trans-fat_100g', 0)),
                                         'gi': 0,
                                         'source': 'openfoodfacts'
                                     }
@@ -178,7 +189,7 @@ def log_entry():
         match = re.search(r'(\d+(?:\.\d+)?)', text)
         if match:
             val = float(match.group(1))
-            regex = r'(\d+(?:\.\d+)?)\s*(grams|gram|g|kgs|kg|kilograms|kilogram|ml|milliliters|milliliter|liters|liter|l)\b'
+            regex = r'(\d+(?:\.\d+)?)\s*(grams|gram|g|kgs|kg|kilograms|kilogram|ml|milliliters|milliliter|liters|liter|l|cup|cups)\b'
             match_unit = re.search(regex, text, flags=re.IGNORECASE)
             
             if match_unit:
@@ -186,6 +197,7 @@ def log_entry():
                  unit = match_unit.group(2).lower()
                  if unit in ['l', 'liter', 'liters']: multiplier = val * 10
                  elif unit in ['kg', 'kgs', 'kilogram', 'kilograms']: multiplier = val * 10
+                 elif unit in ['cup', 'cups']: multiplier = val * 2.4
                  else: multiplier = val / 100.0
             else:
                  multiplier = val
