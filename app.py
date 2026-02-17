@@ -73,9 +73,11 @@ def log_entry():
             # Regex to remove quantity+unit pattern
             # Handles "100g", "100 grams", "2 slices", "slices of", "slices"
             # Number is now optional: (\d+(?:\.\d+)?)?\s*
-            clean_text = re.sub(r'(\d+(?:\.\d+)?)?\s*(grams|gram|g|ounces|ounce|oz|lbs|pounds|pieces|pcs|slices|slice|ml|milliliters|milliliter|liter|l)\\b', '', text, flags=re.IGNORECASE)
+            clean_text = re.sub(r'(\d+(?:\.\d+)?)?\s*(grams|gram|g|ounces|ounce|oz|lbs|pounds|pieces|pcs|slices|slice|ml|milliliters|milliliter|liter|l)\b', '', text, flags=re.IGNORECASE)
             # Remove "of" if it remains at the start (e.g. " of salt")
-            clean_text = re.sub(r'^\s*\\b(of|in|with)\\b\s*', '', clean_text, flags=re.IGNORECASE)
+            clean_text = re.sub(r'^\s*\b(of|in|with)\b\s*', '', clean_text, flags=re.IGNORECASE)
+            # Remove standalone numbers (e.g. "2 eggs" -> "eggs")
+            clean_text = re.sub(r'\b\d+(\.\d+)?\b', '', clean_text)
             clean_text = re.sub(r'\s+', ' ', clean_text).strip() # Collapse spaces
             
             print(f"DEBUG: text='{text}', clean_text='{clean_text}'")
@@ -99,8 +101,9 @@ def log_entry():
                 try:
                     import requests
                     # Clean text using the SAME robust regex as above
-                    search_term = re.sub(r'(\d+(?:\.\d+)?)?\s*(grams|gram|g|ounces|ounce|oz|lbs|pounds|pieces|pcs|slices|slice|ml|milliliters|milliliter|liter|l)\\b', '', text, flags=re.IGNORECASE)
-                    search_term = re.sub(r'^\s*\\b(of|in|with)\\b\s*', '', search_term, flags=re.IGNORECASE)
+                    search_term = re.sub(r'(\d+(?:\.\d+)?)?\s*(grams|gram|g|ounces|ounce|oz|lbs|pounds|pieces|pcs|slices|slice|ml|milliliters|milliliter|liter|l)\b', '', text, flags=re.IGNORECASE)
+                    search_term = re.sub(r'^\s*\b(of|in|with)\b\s*', '', search_term, flags=re.IGNORECASE)
+                    search_term = re.sub(r'\b\d+(\.\d+)?\b', '', search_term)
                     search_term = re.sub(r'\s+', ' ', search_term).strip()
                     
                     if search_term:
@@ -202,7 +205,7 @@ def log_entry():
             # Check for unit presence using regex that allows optional space
             # Added: ml, milliliter, l, liter, fluid ounce, fl oz
             # Also kg, kilogram
-            regex = r'(\d+(?:\.\d+)?)\s*(grams|gram|g|kgs|kg|kilograms|kilogram|ml|milliliters|milliliter|liters|liter|l)\\b'
+            regex = r'(\d+(?:\.\d+)?)\s*(grams|gram|g|kgs|kg|kilograms|kilogram|ml|milliliters|milliliter|liters|liter|l)\b'
             match_unit = re.search(regex, text, flags=re.IGNORECASE)
             
             if match_unit:
