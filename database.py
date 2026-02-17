@@ -26,6 +26,20 @@ def init_db():
         gi REAL DEFAULT 0
     )''')
     
+    # Foods table (Moved from app.py to prevent write-locks during read operations)
+    c.execute('''CREATE TABLE IF NOT EXISTS foods (
+        name TEXT PRIMARY KEY,
+        carbs REAL,
+        fats REAL,
+        protein REAL,
+        calories REAL,
+        potassium REAL,
+        sodium REAL DEFAULT 0,
+        saturated_fat REAL DEFAULT 0,
+        trans_fat REAL DEFAULT 0,
+        gi REAL DEFAULT 0
+    )''')
+
     # Migration: Add columns if they don't exist
     for col in ['sodium', 'saturated_fat', 'trans_fat', 'gi']:
         try:
@@ -68,8 +82,10 @@ def init_db():
     conn.close()
 
 def get_db_connection():
-    conn = sqlite3.connect(DB_NAME)
+    conn = sqlite3.connect(DB_NAME, timeout=30) # Increased timeout to 30s
     conn.row_factory = sqlite3.Row
+    # Enable Write-Ahead Logging for better concurrency
+    conn.execute('PRAGMA journal_mode=WAL;')
     return conn
 
 if __name__ == "__main__":

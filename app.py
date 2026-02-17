@@ -23,28 +23,13 @@ def log_entry():
     
     print(f"DEBUG: Processing log entry for text: '{text}'")
     
+    conn = None
     try:
         conn = get_db_connection()
         c = conn.cursor()
     
-        # Check if foods table exists
-        c.execute('''CREATE TABLE IF NOT EXISTS foods (
-            name TEXT PRIMARY KEY,
-            carbs REAL,
-            fats REAL,
-            protein REAL,
-            calories REAL,
-            potassium REAL,
-            sodium REAL DEFAULT 0,
-            saturated_fat REAL DEFAULT 0,
-            trans_fat REAL DEFAULT 0,
-            gi REAL DEFAULT 0
-        )''')
-        
-        # 1. Parsing logic to find food name
-        # Simplistic extraction: assume the text contains a food name
-        # We will try to match against known DB foods first
-        
+        # Check Local DB
+        # Parsing logic: Simplistic extraction
         known_foods = c.execute('SELECT * FROM foods').fetchall()
         print(f"DEBUG: Loaded {len(known_foods)} local foods.")
         found_food = None
@@ -53,7 +38,6 @@ def log_entry():
         # Sort known foods by length
         known_foods.sort(key=lambda x: len(x['name']), reverse=True)
         
-        # Check Local DB
         for food in known_foods:
             if re.search(r'\\b' + re.escape(food['name']) + r'\\b', text):
                 found_food = dict(food)
@@ -61,46 +45,40 @@ def log_entry():
                 print(f"DEBUG: Found in local DB: {found_food['name']}")
                 break
                 
+        # Close connection while doing potential network requests to avoid holding locks
+        conn.close()
+        conn = None 
+            
         # 2. If not in local DB, search "Online" (Simulated + Fuzzy + Real API)
         if not found_food:
             print("DEBUG: Not found in local DB, trying internal cloud/API...")
-            # A. Check Internal "Cloud" DB (Fast, reliable)
-            # First, try to extract just the food name. This is crucial for fuzzy matching.
-            # Remove numbers: "100"
-            # Remove units: "grams", "g", "ml", "oz"
-            # Remove prepositions/common words? Maybe too complex.
             
-            # Regex to remove quantity+unit pattern
-            # Handles "100g", "100 grams", "2 slices", "slices of", "slices"
-            # Number is now optional: (\d+(?:\.\d+)?)?\s*
+            # Use 'search_food_db' from food_database.py (Simulated "Online")
+            # Cleaning logic
             clean_text = re.sub(r'(\d+(?:\.\d+)?)?\s*(grams|gram|g|ounces|ounce|oz|lbs|pounds|pieces|pcs|slices|slice|ml|milliliters|milliliter|liter|l)\b', '', text, flags=re.IGNORECASE)
-            # Remove "of" if it remains at the start (e.g. " of salt")
             clean_text = re.sub(r'^\s*\b(of|in|with)\b\s*', '', clean_text, flags=re.IGNORECASE)
-            # Remove standalone numbers (e.g. "2 eggs" -> "eggs")
             clean_text = re.sub(r'\b\d+(\.\d+)?\b', '', clean_text)
-            clean_text = re.sub(r'\s+', ' ', clean_text).strip() # Collapse spaces
+            clean_text = re.sub(r'\s+', ' ', clean_text).strip()
             
             print(f"DEBUG: text='{text}', clean_text='{clean_text}'")
             
-            # Try fuzzy search on cleaned text first (most likely to succeed)
+            # Try fuzzy search on cleaned text first
             found_data = search_food_db(clean_text)
             print(f"DEBUG: search_food_db('{clean_text}') -> {found_data}")
             
             if not found_data:
-                 # Try raw text just in case (e.g. "apple pie" might match better as whole string if no numbers)
                  found_data = search_food_db(text)
                  print(f"DEBUG: search_food_db('{text}') -> {found_data}")
 
             if found_data:
                  found_food = found_data
-                 found_food['name'] = clean_text if clean_text else text # Use the matched name or original
+                 found_food['name'] = clean_text if clean_text else text
                  found_food['source'] = 'internal_cloud'
             
             # B. Real External API (OpenFoodFacts) - Fallback
             if not found_food:
                 try:
                     import requests
-                    # Clean text using the SAME robust regex as above
                     search_term = re.sub(r'(\d+(?:\.\d+)?)?\s*(grams|gram|g|ounces|ounce|oz|lbs|pounds|pieces|pcs|slices|slice|ml|milliliters|milliliter|liter|l)\b', '', text, flags=re.IGNORECASE)
                     search_term = re.sub(r'^\s*\b(of|in|with)\b\s*', '', search_term, flags=re.IGNORECASE)
                     search_term = re.sub(r'\b\d+(\.\d+)?\b', '', search_term)
@@ -108,11 +86,11 @@ def log_entry():
                     
                     if search_term:
                         print(f"DEBUG: Searching OpenFoodFacts for: '{search_term}'")
-                        # User-Agent is polite to set
                         headers = {'User-Agent': 'ZeroG_Nutrition_App/1.0'}
                         url = f"https://world.openfoodfacts.org/cgi/search.pl?search_terms={search_term}&search_simple=1&action=process&json=1"
                         try:
-                            r = requests.get(url, headers=headers, timeout=3) # Reduced to 3s to prevent hanging
+                            # 3s timeout
+                            r = requests.get(url, headers=headers, timeout=3)
                             print(f"DEBUG: OpenFoodFacts status: {r.status_code}")
                         except requests.exceptions.Timeout:
                             print("DEBUG: OpenFoodFacts timed out.")
@@ -124,41 +102,36 @@ def log_entry():
                         if r and r.status_code == 200:
                             res = r.json()
                             products = res.get('products', [])
-                            
-                            # Iterate through top 5 results to find one with VALID nutrition
                             for product in products[:5]:
                                 nutriments = product.get('nutriments', {})
                                 cal = nutriments.get('energy-kcal_100g', 0)
-                                
-                                # Only accept if it has valid data (calories OR other significant macros/micros)
-                                # Salt has 0 calories but high sodium. Diet Coke has 0 calories.
                                 if cal > 0 or nutriments.get('sodium_100g', 0) > 0.1 or nutriments.get('carbohydrates_100g', 0) > 0 or nutriments.get('fat_100g', 0) > 0 or nutriments.get('proteins_100g', 0) > 0:
                                     found_food = {
-                                        'name': search_term, # Use our clean name, or product.get('product_name')
+                                        'name': search_term, 
                                         'carbs': nutriments.get('carbohydrates_100g', 0),
                                         'fats': nutriments.get('fat_100g', 0),
                                         'protein': nutriments.get('proteins_100g', 0),
                                         'calories': cal,
-                                        'potassium': nutriments.get('potassium_100g', 0), # Often missing/None
-                                        'sodium': nutriments.get('sodium_100g', 0) * 1000, # OFF is often in g, we want mg? convert if needed. OFF usually g. 1g = 1000mg.
+                                        'potassium': nutriments.get('potassium_100g', 0),
+                                        'sodium': nutriments.get('sodium_100g', 0) * 1000,
                                         'saturated_fat': nutriments.get('saturated-fat_100g', 0),
                                         'trans_fat': nutriments.get('trans-fat_100g', 0),
-                                        'gi': 0, # OFF rarely has GI
+                                        'gi': 0,
                                         'source': 'openfoodfacts'
                                     }
-                                    # Sanitize None values to 0
                                     for k in ['carbs', 'fats', 'protein', 'potassium', 'sodium', 'saturated_fat', 'trans_fat', 'gi']:
                                         if found_food[k] is None: found_food[k] = 0
-                                        
-                                    break # Found a good one, stop looking
-                                    
+                                    break
                 except Exception as e:
                     print(f"DEBUG: OpenFoodFacts failed: {e}")
 
-            # C. Auto-Save if found in either source
+            # Re-open connection for writing if we found something or need to log missing
+            conn = get_db_connection()
+            c = conn.cursor()
+
+            # C. Auto-Save if found
             if found_food:
                  try:
-                     # Use the name found or the cleaned text
                      save_name = found_food['name']
                      c.execute('''INSERT INTO foods (name, carbs, fats, protein, calories, potassium, sodium, saturated_fat, trans_fat, gi)
                                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
@@ -168,13 +141,16 @@ def log_entry():
                      print(f"DEBUG: Auto-saved {save_name} from {found_food.get('source')} to local DB")
                  except Exception as e:
                      print(f"DEBUG: Could not auto-save: {e}")
-                     # Try update if fail
+                     # Ignore unique constraint errors etc
                      pass
 
         if not found_food:
-            # Log to missing_foods table
+            # Need connection to log missing
+            if not conn:
+                 conn = get_db_connection()
+                 c = conn.cursor()
+                 
             try:
-                 # Use the sanitized search_term if available, else text
                  term_to_log = locals().get('search_term', text).lower().strip()
                  if term_to_log:
                      c.execute('''INSERT INTO missing_foods (term, count, last_searched) 
@@ -182,11 +158,9 @@ def log_entry():
                                   ON CONFLICT(term) DO UPDATE SET count = count + 1, last_searched = ?''', 
                                (term_to_log, datetime.datetime.now().isoformat(), datetime.datetime.now().isoformat()))
                      conn.commit()
-                     print(f"DEBUG: Logged '{term_to_log}' to missing_foods.")
             except Exception as e:
                  print(f"DEBUG: Failed to log missing food: {e}")
 
-            # Fallback for truly unknown
             conn.close()
             return jsonify({
                 'status': 'unknown', 
@@ -195,34 +169,24 @@ def log_entry():
                 'debug_search_result': locals().get('found_data', 'N/A')
             })
         
-        # Calculate multipliers (very basic)
-        # If "2 eggs", multiplier = 2. Default = 1.
+        # Calculate multipliers
+        if not conn:
+             conn = get_db_connection()
+             c = conn.cursor()
+             
         multiplier = 1
-        match = re.search(r'(\d+(?:\.\d+)?)', text) # Allow decimals
+        match = re.search(r'(\d+(?:\.\d+)?)', text)
         if match:
             val = float(match.group(1))
-            # Heuristic: If "grams" or "ml" is present immediately after number
-            # Check for unit presence using regex that allows optional space
-            # Added: ml, milliliter, l, liter, fluid ounce, fl oz
-            # Also kg, kilogram
             regex = r'(\d+(?:\.\d+)?)\s*(grams|gram|g|kgs|kg|kilograms|kilogram|ml|milliliters|milliliter|liters|liter|l)\b'
             match_unit = re.search(regex, text, flags=re.IGNORECASE)
             
             if match_unit:
-                 val = float(match_unit.group(1)) # Use the value attached to the unit
+                 val = float(match_unit.group(1))
                  unit = match_unit.group(2).lower()
-                 
-                 if unit in ['l', 'liter', 'liters']:
-                     # 1 L = 1000ml = 10 units (of 100ml)
-                     multiplier = val * 10
-                 elif unit in ['kg', 'kgs', 'kilogram', 'kilograms']:
-                     # 1 kg = 1000g = 10 units (of 100g)
-                     multiplier = val * 10
-                 else:
-                     # Grams, ml -> divide by 100
-                     # "100g" -> 1.0
-                     # "500ml" -> 5.0
-                     multiplier = val / 100.0
+                 if unit in ['l', 'liter', 'liters']: multiplier = val * 10
+                 elif unit in ['kg', 'kgs', 'kilogram', 'kilograms']: multiplier = val * 10
+                 else: multiplier = val / 100.0
             else:
                  multiplier = val
             
@@ -234,15 +198,13 @@ def log_entry():
         sodium = found_food.get('sodium', 0) * multiplier
         saturated_fat = found_food.get('saturated_fat', 0) * multiplier
         trans_fat = found_food.get('trans_fat', 0) * multiplier
-        gi = found_food.get('gi', 0) # GI does not multiply with quantity, it's a property
+        gi = found_food.get('gi', 0)
         
         c.execute('''INSERT INTO logs (date, input_type, content, carbs, fats, protein, calories, potassium, sodium, saturated_fat, trans_fat, gi)
                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
                   (datetime.date.today().isoformat(), 'text', text, carbs, fats, protein, calories, potassium, sodium, saturated_fat, trans_fat, gi))
         conn.commit()
-        conn.close()
         
-        # Return full details for the UI popup
         scan_info = {
             'name': found_food.get('name', text),
             'qty': multiplier,
@@ -265,6 +227,9 @@ def log_entry():
         import traceback
         traceback.print_exc()
         return jsonify({'status': 'error', 'message': str(e)}), 500
+    finally:
+        if conn:
+            conn.close()
 
 @app.route('/api/health')
 def health_check():
