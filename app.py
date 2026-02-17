@@ -23,8 +23,9 @@ def log_entry():
     
     print(f"DEBUG: Processing log entry for text: '{text}'")
     
-    conn = get_db_connection()
-    c = conn.cursor()
+    try:
+        conn = get_db_connection()
+        c = conn.cursor()
     
     # Check if foods table exists
     c.execute('''CREATE TABLE IF NOT EXISTS foods (
@@ -255,6 +256,44 @@ def log_entry():
     }
     
     return jsonify({'status': 'success', 'logged': scan_info})
+
+    except Exception as e:
+        print(f"CRITICAL ERROR in log_entry: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@app.route('/api/health')
+def health_check():
+    from food_database import search_food_db
+    import os
+    
+    status = {'status': 'ok'}
+    
+    # 1. Check DB Write
+    try:
+        conn = get_db_connection()
+        conn.execute('CREATE TABLE IF NOT EXISTS health_check (id INTEGER PRIMARY KEY)')
+        conn.execute('INSERT INTO health_check DEFAULT VALUES')
+        conn.commit()
+        conn.close()
+        status['db_write'] = 'success'
+    except Exception as e:
+        status['db_write'] = f'failed: {e}'
+        
+    # 2. Check Fuzzy Match
+    try:
+        res = search_food_db('longaniza')
+        status['fuzzy_match_longaniza'] = res['name'] if res else 'not found'
+    except Exception as e:
+        status['fuzzy_match_longaniza'] = f'error: {e}'
+        
+    # 3. Check File
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    status['db_path'] = os.path.join(base_dir, "zerog.db")
+    status['db_exists'] = os.path.exists(status['db_path'])
+    
+    return jsonify(status)
 
 @app.route('/api/add_food', methods=['POST'])
 def add_food():
