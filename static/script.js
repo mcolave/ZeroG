@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const recognition = new webkitSpeechRecognition();
         recognition.continuous = false;
         recognition.interimResults = false;
-        recognition.lang = 'en-US';
+        recognition.lang = 'tl-PH'; // Support Filipino/Taglish
 
         micBtn.addEventListener('click', () => {
             if (isRecording) {

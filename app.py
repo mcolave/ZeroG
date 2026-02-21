@@ -29,9 +29,28 @@ from food_database import search_food_db
 @app.route('/api/log', methods=['POST'])
 def log_entry():
     data = request.json
-    text = data.get('text', '').lower()
+    raw_text = data.get('text', '').lower()
     
-    print(f"DEBUG: Processing log entry for text: '{text}'")
+    import re
+    # 1. Translate Tagalog number words to digits (to support e.g. "dalawang piraso")
+    tagalog_numbers = {
+        r'\bisang\b': '1', r'\bisa\b': '1', 
+        r'\bdalawang\b': '2', r'\bdalawa\b': '2',
+        r'\btatlong\b': '3', r'\btatlo\b': '3',
+        r'\bapat na\b': '4', r'\bapat\b': '4',
+        r'\blimang\b': '5', r'\blima\b': '5',
+        r'\banim na\b': '6', r'\banim\b': '6',
+        r'\bpitong\b': '7', r'\bpito\b': '7',
+        r'\bwalong\b': '8', r'\bwalo\b': '8',
+        r'\bsiyam na\b': '9', r'\bsiyam\b': '9',
+        r'\bsampung\b': '10', r'\bsampu\b': '10',
+        r'\bkalahating\b': '0.5', r'\bkalahati\b': '0.5'
+    }
+    text = raw_text
+    for tg_word, digit in tagalog_numbers.items():
+        text = re.sub(tg_word, digit, text, flags=re.IGNORECASE)
+    
+    print(f"DEBUG: Processing log entry for text: '{text}' (orig: '{raw_text}')")
     
     conn = None
     try:
@@ -65,8 +84,15 @@ def log_entry():
             
             # Use 'search_food_db' from food_database.py (Simulated "Online")
             # Cleaning logic
-            clean_text = re.sub(r'(\d+(?:\.\d+)?)?\s*(grams|gram|g|ounces|ounce|oz|lbs|pounds|pieces|pcs|slices|slice|ml|milliliters|milliliter|liter|l|cup|cups)\b', '', text, flags=re.IGNORECASE)
-            clean_text = re.sub(r'^\s*\b(of|in|with)\b\s*', '', clean_text, flags=re.IGNORECASE)
+            
+            # Expanded units regex including Tagalog (piraso, hiwa, tasa, kutsara, kutsarita, gramo)
+            unit_regex = r'(\d+(?:\.\d+)?)?\s*\b(grams|gram|g|ounces|ounce|oz|lbs|pounds|pieces|pcs|slices|slice|ml|milliliters|milliliter|liter|l|cup|cups|piraso|hiwa|tasa|kutsara|kutsarita|gramo)\b'
+            # Expanded connectors regex including Tagalog (of, in, with, ng, na)
+            connector_regex = r'\s*\b(of|in|with|ng|na)\b\s*'
+
+            clean_text = text
+            clean_text = re.sub(unit_regex, '', clean_text, flags=re.IGNORECASE)
+            clean_text = re.sub(connector_regex, '', clean_text, flags=re.IGNORECASE)
             clean_text = re.sub(r'\b\d+(\.\d+)?\b', '', clean_text)
             clean_text = re.sub(r'\s+', ' ', clean_text).strip()
             
@@ -89,8 +115,9 @@ def log_entry():
             if not found_food:
                 try:
                     import requests
-                    search_term = re.sub(r'(\d+(?:\.\d+)?)?\s*(grams|gram|g|ounces|ounce|oz|lbs|pounds|pieces|pcs|slices|slice|ml|milliliters|milliliter|liter|l|cup|cups)\b', '', text, flags=re.IGNORECASE)
-                    search_term = re.sub(r'^\s*\b(of|in|with)\b\s*', '', search_term, flags=re.IGNORECASE)
+                    search_term = text
+                    search_term = re.sub(unit_regex, '', search_term, flags=re.IGNORECASE)
+                    search_term = re.sub(connector_regex, '', search_term, flags=re.IGNORECASE)
                     search_term = re.sub(r'\b\d+(\.\d+)?\b', '', search_term)
                     search_term = re.sub(r'\s+', ' ', search_term).strip()
                     
@@ -212,16 +239,19 @@ def log_entry():
         match = re.search(r'(\d+(?:\.\d+)?)', text)
         if match:
             val = float(match.group(1))
-            regex = r'(\d+(?:\.\d+)?)\s*(grams|gram|g|kgs|kg|kilograms|kilogram|ml|milliliters|milliliter|liters|liter|l|cup|cups)\b'
+            regex = r'(\d+(?:\.\d+)?)\s*\b(grams|gram|g|kgs|kg|kilograms|kilogram|ml|milliliters|milliliter|liters|liter|l|cup|cups|piraso|hiwa|tasa|kutsara|kutsarita|gramo)\b'
             match_unit = re.search(regex, text, flags=re.IGNORECASE)
             
             if match_unit:
                  val = float(match_unit.group(1))
                  unit = match_unit.group(2).lower()
-                 if unit in ['l', 'liter', 'liters']: multiplier = val * 10
-                 elif unit in ['kg', 'kgs', 'kilogram', 'kilograms']: multiplier = val * 10
-                 elif unit in ['cup', 'cups']: multiplier = val * 2.4
-                 else: multiplier = val / 100.0
+                 if unit in ['l', 'liter', 'liters', 'litro']: multiplier = val * 10
+                 elif unit in ['kg', 'kgs', 'kilogram', 'kilograms', 'kilo']: multiplier = val * 10
+                 elif unit in ['cup', 'cups', 'tasa']: multiplier = val * 2.4
+                 elif unit in ['kutsara']: multiplier = val * 0.15 # tbsp ~ 15g
+                 elif unit in ['kutsarita']: multiplier = val * 0.05 # tsp ~ 5g
+                 elif unit in ['piraso', 'hiwa']: multiplier = val # standard 1 unit
+                 else: multiplier = val / 100.0 # grams/ml default
             else:
                  multiplier = val
             

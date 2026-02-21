@@ -26,6 +26,8 @@ def estimate_macros(food_description):
         You are a highly accurate nutrition database API. I will provide you with a food or meal description.
         You must estimate its nutritional values.
         
+        Note: The food description might be in English, Filipino (Tagalog), or Taglish. Please translate and adapt to local Filipino foods, dishes, and measurement units if necessary.
+        
         Food: "{food_description}"
         
         Respond ONLY with a raw JSON object and nothing else (no markdown formatting, no explanations). The JSON object must have exactly these keys:
