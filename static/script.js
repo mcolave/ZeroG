@@ -174,10 +174,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function submitLog() {
-        // ... (existing pre-logic) ...
         const text = foodInput.value.trim();
         if (!text) return;
+
+        // Simulate a loading state immediately
+        const originalIcon = sendBtn.innerHTML;
         sendBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+
+        // If it takes more than 1.5s, it's probably using AI fallback, show a brain/sparkle
+        let isAILoading = false;
+        const aiLoadingTimer = setTimeout(() => {
+            isAILoading = true;
+            sendBtn.innerHTML = '<i class="fa-solid fa-brain fa-pulse" style="color: #00d2ff;"></i>';
+        }, 1500);
 
         try {
             const response = await fetch('/api/log', {
@@ -187,19 +196,25 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             const data = await response.json();
 
+            clearTimeout(aiLoadingTimer); // Clear the AI loading timer regardless of outcome
+
             if (data.status === 'success') {
                 foodInput.value = ''; // Clear input
                 fetchData(); // Refresh stats
+                // Optionally, add a notification if AI was used
+                if (data.logged && data.logged.source === 'gemini_ai') {
+                    showNotification(`AI estimated nutrition for "${data.logged.name}"`, "success");
+                }
             } else if (data.status === 'unknown') {
-                // ... (existing add food logic) ...
                 let suggestedName = text.replace(/[0-9]+/g, '').replace(/\b(grams|gram|g)\b/gi, '').trim();
                 newFoodName.value = suggestedName;
                 addFoodModal.classList.remove('hidden');
             }
         } catch (error) {
             console.error("Error logging:", error);
+            clearTimeout(aiLoadingTimer); // Clear on error too
         } finally {
-            sendBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i>';
+            sendBtn.innerHTML = originalIcon; // Reset button state
         }
     }
 
@@ -233,9 +248,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         listEl.innerHTML = '';
+        let index = 0;
         history.forEach(item => {
             const div = document.createElement('div');
-            div.className = 'history-item glass-panel';
+            div.className = 'history-item glass-panel fade-in-up';
             div.style.padding = '10px';
             div.style.display = 'flex';
             div.style.justifyContent = 'space-between';
@@ -243,6 +259,8 @@ document.addEventListener('DOMContentLoaded', () => {
             div.style.background = 'rgba(255,255,255,0.05)';
             div.style.marginBottom = '6px';
             div.style.cursor = 'help'; // Indicate hoverable
+            div.style.animationDelay = `${(index * 0.05) + 0.5}s`; // Stagger load after sections
+            index++;
 
             // Add detailed info on hover
             const details = `Calories: ${Math.round(item.calories)}\nCarbs: ${Math.round(item.carbs)}g\nProtein: ${Math.round(item.protein)}g\nFats: ${Math.round(item.fats)}g\nSodium: ${Math.round(item.sodium || 0)}mg\nPotassium: ${Math.round(item.potassium)}mg\nGI: ${item.gi || 0}`;

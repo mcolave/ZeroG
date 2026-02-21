@@ -4,6 +4,9 @@ import datetime
 import os
 import time
 import requests # Ensure it's available
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -142,6 +145,19 @@ def log_entry():
                                     break
                 except Exception as e:
                     print(f"DEBUG: OpenFoodFacts failed: {e}")
+
+            # D. AI Fallback (Gemini)
+            if not found_food:
+                print("DEBUG: OpenFoodFacts failed, falling back to Gemini AI...")
+                try:
+                    import ai_nutrition
+                    # Use the raw text to give Gemini context about quantity if possible,
+                    # but mostly the AI takes `text`.
+                    res = ai_nutrition.estimate_macros(text)
+                    if res:
+                        found_food = res
+                except Exception as e:
+                    print(f"DEBUG: AI Fallback failed: {e}")
 
             # Re-open connection for writing if we found something or need to log missing
             conn = get_db_connection()
