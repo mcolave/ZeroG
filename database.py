@@ -2,8 +2,15 @@ import sqlite3
 import datetime
 
 import os
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_NAME = os.path.join(BASE_DIR, "zerog.db")
+# If running on Render, map the DB to the persistent disk path
+RENDER_DISK = os.getenv('RENDER_DISK_PATH')
+if RENDER_DISK:
+    DB_NAME = os.path.join(RENDER_DISK, "zerog.db")
+else:
+    # Local development fallback
+    DB_NAME = os.path.join(BASE_DIR, "zerog.db")
 
 def init_db():
     conn = sqlite3.connect(DB_NAME)
