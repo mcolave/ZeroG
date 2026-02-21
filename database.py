@@ -33,12 +33,15 @@ class DBCursorWrapper:
                 query = 'INSERT INTO settings (id) VALUES (1) ON CONFLICT (id) DO NOTHING'
             
             if args:
-                return self.cursor.execute(query, args)
-            return self.cursor.execute(query)
+                self.cursor.execute(query, args)
+            else:
+                self.cursor.execute(query)
         else:
             if args:
-                return self.cursor.execute(query, args)
-            return self.cursor.execute(query)
+                self.cursor.execute(query, args)
+            else:
+                self.cursor.execute(query)
+        return self
 
     def fetchone(self):
         return self.cursor.fetchone()
