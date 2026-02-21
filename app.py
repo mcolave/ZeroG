@@ -85,8 +85,8 @@ def log_entry():
             # Use 'search_food_db' from food_database.py (Simulated "Online")
             # Cleaning logic
             
-            # Expanded units regex including Tagalog (piraso, hiwa, tasa, kutsara, kutsarita, gramo)
-            unit_regex = r'(\d+(?:\.\d+)?)?\s*\b(grams|gram|g|ounces|ounce|oz|lbs|pounds|pieces|pcs|slices|slice|ml|milliliters|milliliter|liter|l|cup|cups|piraso|hiwa|tasa|kutsara|kutsarita|gramo)\b'
+            # Expanded units regex including Tagalog (piraso, hiwa, tasa, kutsara, kutsarita, gramo, baso, basong)
+            unit_regex = r'(\d+(?:\.\d+)?)?\s*\b(grams|gram|g|ounces|ounce|oz|lbs|pounds|pieces|pcs|slices|slice|ml|milliliters|milliliter|liter|l|cup|cups|piraso|hiwa|tasa|kutsara|kutsarita|gramo|baso|basong)\b'
             # Expanded connectors regex including Tagalog (of, in, with, ng, na)
             connector_regex = r'\s*\b(of|in|with|ng|na)\b\s*'
 
@@ -183,7 +183,10 @@ def log_entry():
                     res = ai_nutrition.estimate_macros(text)
                     if res:
                         found_food = res
+                    else:
+                        ai_err_str = "ai_nutrition returned None"
                 except Exception as e:
+                    ai_err_str = str(e)
                     print(f"DEBUG: AI Fallback failed: {e}")
 
             # Re-open connection for writing if we found something or need to log missing
@@ -239,7 +242,7 @@ def log_entry():
         match = re.search(r'(\d+(?:\.\d+)?)', text)
         if match:
             val = float(match.group(1))
-            regex = r'(\d+(?:\.\d+)?)\s*\b(grams|gram|g|kgs|kg|kilograms|kilogram|ml|milliliters|milliliter|liters|liter|l|cup|cups|piraso|hiwa|tasa|kutsara|kutsarita|gramo)\b'
+            regex = r'(\d+(?:\.\d+)?)\s*\b(grams|gram|g|kgs|kg|kilograms|kilogram|ml|milliliters|milliliter|liters|liter|l|cup|cups|piraso|hiwa|tasa|kutsara|kutsarita|gramo|baso|basong)\b'
             match_unit = re.search(regex, text, flags=re.IGNORECASE)
             
             if match_unit:
@@ -247,7 +250,7 @@ def log_entry():
                  unit = match_unit.group(2).lower()
                  if unit in ['l', 'liter', 'liters', 'litro']: multiplier = val * 10
                  elif unit in ['kg', 'kgs', 'kilogram', 'kilograms', 'kilo']: multiplier = val * 10
-                 elif unit in ['cup', 'cups', 'tasa']: multiplier = val * 2.4
+                 elif unit in ['cup', 'cups', 'tasa', 'baso', 'basong']: multiplier = val * 2.4
                  elif unit in ['kutsara']: multiplier = val * 0.15 # tbsp ~ 15g
                  elif unit in ['kutsarita']: multiplier = val * 0.05 # tsp ~ 5g
                  elif unit in ['piraso', 'hiwa']: multiplier = val # standard 1 unit
