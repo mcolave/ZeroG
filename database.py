@@ -29,8 +29,12 @@ class DBCursorWrapper:
             # Replace sqlite '?' placeholders with postgres '%s'
             # SQLite ON CONFLICT(term) DO UPDATE -> Postgres ON CONFLICT (term) DO UPDATE
             query = query.replace('?', '%s')
-            if 'INSERT OR IGNORE INTO settings' in query:
-                query = 'INSERT INTO settings (id) VALUES (1) ON CONFLICT (id) DO NOTHING'
+            if 'INSERT OR IGNORE INTO' in query:
+                query = query.replace('INSERT OR IGNORE INTO', 'INSERT INTO')
+                if 'settings' in query and 'ON CONFLICT' not in query:
+                    query = 'INSERT INTO settings (id) VALUES (1) ON CONFLICT (id) DO NOTHING'
+                elif 'foods' in query and 'ON CONFLICT' not in query:
+                    query += ' ON CONFLICT (name) DO NOTHING'
             
             if args:
                 self.cursor.execute(query, args)
@@ -62,6 +66,9 @@ class DBConnectionWrapper:
     
     def commit(self):
         self.conn.commit()
+
+    def rollback(self):
+        self.conn.rollback()
 
     def close(self):
         self.conn.close()

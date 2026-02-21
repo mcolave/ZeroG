@@ -68,7 +68,7 @@ def log_entry():
         known_foods.sort(key=lambda x: len(x['name']), reverse=True)
         
         for food in known_foods:
-            if re.search(r'\\b' + re.escape(food['name']) + r'\\b', text):
+            if re.search(r'\b' + re.escape(food['name']) + r'\b', text):
                 found_food = dict(food)
                 found_food['source'] = 'local'
                 print(f"DEBUG: Found in local DB: {found_food['name']}")
@@ -197,7 +197,7 @@ def log_entry():
             if found_food:
                  try:
                      save_name = found_food['name']
-                     c.execute('''INSERT INTO foods (name, carbs, fats, protein, calories, potassium, sodium, saturated_fat, trans_fat, gi)
+                     c.execute('''INSERT OR IGNORE INTO foods (name, carbs, fats, protein, calories, potassium, sodium, saturated_fat, trans_fat, gi)
                                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
                                (save_name, found_food['carbs'], found_food['fats'], found_food['protein'], found_food['calories'], found_food.get('potassium', 0),
                                 found_food.get('sodium', 0), found_food.get('saturated_fat', 0), found_food.get('trans_fat', 0), found_food.get('gi', 0)))
@@ -206,6 +206,7 @@ def log_entry():
                  except Exception as e:
                      print(f"DEBUG: Could not auto-save: {e}")
                      # Ignore unique constraint errors etc
+                     conn.rollback()
                      pass
 
         if not found_food:
@@ -359,6 +360,7 @@ def add_food():
         conn.commit()
     except Exception as e:
         print(f"Error adding food: {e}")
+        conn.rollback()
         # Maybe update if exists?
         c.execute('''UPDATE foods SET carbs=?, fats=?, protein=?, calories=? WHERE name=?''',
                   (data.get('carbs', 0), data.get('fats', 0), 
