@@ -219,7 +219,7 @@ def log_entry():
                  if term_to_log:
                      c.execute('''INSERT INTO missing_foods (term, count, last_searched) 
                                   VALUES (?, 1, ?) 
-                                  ON CONFLICT(term) DO UPDATE SET count = count + 1, last_searched = ?''', 
+                                  ON CONFLICT(term) DO UPDATE SET count = missing_foods.count + 1, last_searched = ?''', 
                                (term_to_log, datetime.datetime.now().isoformat(), datetime.datetime.now().isoformat()))
                      conn.commit()
             except Exception as e:
