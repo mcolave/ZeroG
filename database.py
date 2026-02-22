@@ -81,7 +81,7 @@ class DBConnectionWrapper:
 def init_db():
     if DATABASE_URL and HAS_POSTGRES:
         print("DEBUG: Initializing PostgreSQL database schema...")
-        conn = psycopg2.connect(DATABASE_URL)
+        conn = psycopg2.connect(DATABASE_URL, connect_timeout=15)
         c = conn.cursor()
         
         # Postgres schemas
@@ -218,7 +218,7 @@ def init_db():
 
 def get_db_connection():
     if DATABASE_URL and HAS_POSTGRES:
-        conn = psycopg2.connect(DATABASE_URL)
+        conn = psycopg2.connect(DATABASE_URL, connect_timeout=15)
         return DBConnectionWrapper(conn, is_postgres=True)
     else:
         conn = sqlite3.connect(DB_NAME, timeout=30) # Increased timeout to 30s
