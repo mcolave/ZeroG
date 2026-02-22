@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const fileUpload = document.getElementById('file-upload');
     const voiceStatus = document.getElementById('voice-status');
     const settingsBtn = document.getElementById('settings-btn');
+    const quickResetBtn = document.getElementById('quick-reset-btn');
+    const quickTargetCalories = document.getElementById('quick-target-calories');
     const closeSettingsBtn = document.getElementById('close-settings');
     const settingsModal = document.getElementById('settings-modal');
     const diabetesToggle = document.getElementById('diabetes-toggle');
@@ -106,12 +108,71 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Settings Modal
-    settingsBtn.addEventListener('click', () => settingsModal.classList.remove('hidden'));
-    closeSettingsBtn.addEventListener('click', () => settingsModal.classList.add('hidden'));
+    if (settingsBtn) {
+        settingsBtn.addEventListener('click', () => settingsModal.classList.remove('hidden'));
+    }
 
-    settingsModal.addEventListener('click', (e) => {
-        if (e.target === settingsModal) settingsModal.classList.add('hidden');
-    });
+    if (closeSettingsBtn) {
+        closeSettingsBtn.addEventListener('click', () => settingsModal.classList.add('hidden'));
+    }
+
+    if (settingsModal) {
+        settingsModal.addEventListener('click', (e) => {
+            if (e.target === settingsModal) settingsModal.classList.add('hidden');
+        });
+    }
+
+    // Quick Header Controls
+    if (quickResetBtn) {
+        quickResetBtn.addEventListener('click', async () => {
+            if (confirm("Reset today's logs?")) {
+                try {
+                    const originalText = quickResetBtn.innerText;
+                    quickResetBtn.innerText = "Clearing...";
+                    await fetch('/api/reset', { method: 'POST' });
+                    await fetchData();
+                    quickResetBtn.innerText = "Cleared";
+                    setTimeout(() => quickResetBtn.innerText = originalText, 2000);
+                } catch (error) {
+                    console.error("Error resetting:", error);
+                    quickResetBtn.innerText = "Error";
+                }
+            }
+        });
+    }
+
+    if (quickTargetCalories) {
+        quickTargetCalories.addEventListener('change', async () => {
+            try {
+                const calTarget = parseFloat(quickTargetCalories.value) || 2000;
+                let targetCarbs = 250, targetProt = 100, targetFats = 70;
+                if (PRESETS[calTarget.toString()]) {
+                    targetCarbs = PRESETS[calTarget.toString()].carbs;
+                    targetProt = PRESETS[calTarget.toString()].prot;
+                    targetFats = PRESETS[calTarget.toString()].fat;
+                }
+                const newSettings = {
+                    target_calories: calTarget,
+                    target_carbs: targetCarbs,
+                    target_protein: targetProt,
+                    target_fats: targetFats,
+                    target_potassium: 3500
+                };
+
+                quickTargetCalories.disabled = true;
+                await fetch('/api/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newSettings)
+                });
+                await fetchData();
+                quickTargetCalories.disabled = false;
+            } catch (error) {
+                console.error("Failed to update target calories:", error);
+                quickTargetCalories.disabled = false;
+            }
+        });
+    }
 
     // Settings Toggles
     diabetesToggle.addEventListener('change', updateSettings);
@@ -366,6 +427,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         if (caloriePreset) caloriePreset.value = foundPreset;
+
+        // Sync Quick Header Dropdown
+        const quickTargetCalories = document.getElementById('quick-target-calories');
+        if (quickTargetCalories) {
+            const options = Array.from(quickTargetCalories.options).map(o => o.value);
+            if (options.includes(currentCal.toString())) {
+                quickTargetCalories.value = currentCal.toString();
+            } else {
+                quickTargetCalories.value = "2000"; // Fallback
+            }
+        }
     }
 
     async function updateSettings() {
