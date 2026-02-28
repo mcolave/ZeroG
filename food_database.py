@@ -74,6 +74,66 @@ FOOD_DB = {
     'hotdog': {'carbs': 2, 'fats': 25, 'protein': 10, 'calories': 290, 'potassium': 150, 'sodium': 1000, 'saturated_fat': 9, 'trans_fat': 0, 'gi': 0},
     'fried chicken': {'carbs': 10, 'fats': 15, 'protein': 25, 'calories': 280, 'potassium': 220, 'sodium': 600, 'saturated_fat': 4, 'trans_fat': 0.2, 'gi': 0},
     
+    # Fast Food / Branded
+    'mcdonalds burger': {'carbs': 33, 'fats': 9, 'protein': 12, 'calories': 250, 'potassium': 200, 'sodium': 480, 'saturated_fat': 3.5, 'trans_fat': 0.5, 'gi': 66},
+    'mcdonalds cheeseburger': {'carbs': 33, 'fats': 12, 'protein': 15, 'calories': 300, 'potassium': 220, 'sodium': 680, 'saturated_fat': 5, 'trans_fat': 0.5, 'gi': 66},
+    'mcdonalds fries': {'carbs': 43, 'fats': 15, 'protein': 4, 'calories': 320, 'potassium': 600, 'sodium': 260, 'saturated_fat': 2.5, 'trans_fat': 0, 'gi': 75},
+    'big mac': {'carbs': 45, 'fats': 30, 'protein': 25, 'calories': 550, 'potassium': 400, 'sodium': 1010, 'saturated_fat': 10, 'trans_fat': 1, 'gi': 66},
+    'mcchicken': {'carbs': 39, 'fats': 21, 'protein': 14, 'calories': 400, 'potassium': 250, 'sodium': 560, 'saturated_fat': 3.5, 'trans_fat': 0, 'gi': 66},
+    'mcnuggets': {'carbs': 16, 'fats': 16, 'protein': 15, 'calories': 280, 'potassium': 300, 'sodium': 500, 'saturated_fat': 2.5, 'trans_fat': 0, 'gi': 60},
+    
+    'jollibee yum burger': {'carbs': 35, 'fats': 12, 'protein': 11, 'calories': 280, 'potassium': 150, 'sodium': 500, 'saturated_fat': 5, 'trans_fat': 0.5, 'gi': 66},
+    'jollibee chickenjoy': {'carbs': 15, 'fats': 22, 'protein': 25, 'calories': 350, 'potassium': 250, 'sodium': 850, 'saturated_fat': 6, 'trans_fat': 0, 'gi': 0},
+    'jollibee spaghetti': {'carbs': 55, 'fats': 10, 'protein': 15, 'calories': 360, 'potassium': 300, 'sodium': 850, 'saturated_fat': 4, 'trans_fat': 0, 'gi': 55},
+    'jollibee burger steak': {'carbs': 30, 'fats': 18, 'protein': 14, 'calories': 320, 'potassium': 200, 'sodium': 750, 'saturated_fat': 7, 'trans_fat': 0, 'gi': 65},
+    'jollibee fries': {'carbs': 45, 'fats': 16, 'protein': 4, 'calories': 340, 'potassium': 650, 'sodium': 300, 'saturated_fat': 3, 'trans_fat': 0, 'gi': 75},
+
+    'carls jr burger': {'carbs': 42, 'fats': 18, 'protein': 22, 'calories': 420, 'potassium': 300, 'sodium': 850, 'saturated_fat': 7, 'trans_fat': 1, 'gi': 66},
+    'famous star': {'carbs': 53, 'fats': 37, 'protein': 28, 'calories': 670, 'potassium': 450, 'sodium': 1210, 'saturated_fat': 13, 'trans_fat': 1.5, 'gi': 66},
+    
+    'burger king whopper': {'carbs': 49, 'fats': 40, 'protein': 28, 'calories': 660, 'potassium': 400, 'sodium': 980, 'saturated_fat': 12, 'trans_fat': 1, 'gi': 66},
+    'burger king burger': {'carbs': 30, 'fats': 14, 'protein': 16, 'calories': 295, 'potassium': 250, 'sodium': 450, 'saturated_fat': 5, 'trans_fat': 0.5, 'gi': 66},
+    'burger king chicken sandwich': {'carbs': 40, 'fats': 25, 'protein': 18, 'calories': 430, 'potassium': 300, 'sodium': 1000, 'saturated_fat': 5, 'trans_fat': 0, 'gi': 66},
+    'burger king fries': {'carbs': 52, 'fats': 17, 'protein': 5, 'calories': 380, 'potassium': 600, 'sodium': 570, 'saturated_fat': 3, 'trans_fat': 0, 'gi': 75},
+    
+    'wendys burger': {'carbs': 48, 'fats': 36, 'protein': 30, 'calories': 650, 'potassium': 400, 'sodium': 1350, 'saturated_fat': 14, 'trans_fat': 1.5, 'gi': 66},
+    'wendys chicken sandwich': {'carbs': 46, 'fats': 25, 'protein': 22, 'calories': 500, 'potassium': 350, 'sodium': 1140, 'saturated_fat': 4.5, 'trans_fat': 0, 'gi': 66},
+    'carls jr chicken sandwich': {'carbs': 45, 'fats': 20, 'protein': 25, 'calories': 470, 'potassium': 350, 'sodium': 1100, 'saturated_fat': 4, 'trans_fat': 0, 'gi': 66},
+    
+    'kfc original recipe chicken': {'carbs': 11, 'fats': 21, 'protein': 18, 'calories': 320, 'potassium': 250, 'sodium': 970, 'saturated_fat': 4, 'trans_fat': 0, 'gi': 50},
+    'kfc chicken': {'carbs': 11, 'fats': 21, 'protein': 18, 'calories': 320, 'potassium': 250, 'sodium': 970, 'saturated_fat': 4, 'trans_fat': 0, 'gi': 50},
+    'kfc fries': {'carbs': 39, 'fats': 15, 'protein': 4, 'calories': 300, 'potassium': 550, 'sodium': 600, 'saturated_fat': 2, 'trans_fat': 0, 'gi': 75},
+
+    'subway chicken breast': {'carbs': 40, 'fats': 5, 'protein': 23, 'calories': 300, 'potassium': 350, 'sodium': 650, 'saturated_fat': 1, 'trans_fat': 0, 'gi': 50},
+    'subway roasted chicken': {'carbs': 40, 'fats': 5, 'protein': 23, 'calories': 300, 'potassium': 350, 'sodium': 650, 'saturated_fat': 1, 'trans_fat': 0, 'gi': 50},
+    'subway chicken teriyaki': {'carbs': 48, 'fats': 4, 'protein': 24, 'calories': 340, 'potassium': 300, 'sodium': 750, 'saturated_fat': 1, 'trans_fat': 0, 'gi': 55},
+    'subway meatball marinara': {'carbs': 45, 'fats': 18, 'protein': 21, 'calories': 430, 'potassium': 400, 'sodium': 1000, 'saturated_fat': 7, 'trans_fat': 0.5, 'gi': 55},
+    'subway italian bmt': {'carbs': 40, 'fats': 16, 'protein': 20, 'calories': 410, 'potassium': 300, 'sodium': 1200, 'saturated_fat': 6, 'trans_fat': 0, 'gi': 55},
+    'subway bmt': {'carbs': 40, 'fats': 16, 'protein': 20, 'calories': 410, 'potassium': 300, 'sodium': 1200, 'saturated_fat': 6, 'trans_fat': 0, 'gi': 55},
+    'subway tuna': {'carbs': 38, 'fats': 20, 'protein': 18, 'calories': 410, 'potassium': 200, 'sodium': 600, 'saturated_fat': 3.5, 'trans_fat': 0, 'gi': 50},
+    'subway steak and cheese': {'carbs': 40, 'fats': 10, 'protein': 26, 'calories': 340, 'potassium': 350, 'sodium': 1050, 'saturated_fat': 4.5, 'trans_fat': 0, 'gi': 55},
+    'subway veggie delite': {'carbs': 39, 'fats': 2.5, 'protein': 9, 'calories': 200, 'potassium': 250, 'sodium': 280, 'saturated_fat': 0.5, 'trans_fat': 0, 'gi': 45},
+    'subway club': {'carbs': 41, 'fats': 8, 'protein': 24, 'calories': 330, 'potassium': 350, 'sodium': 850, 'saturated_fat': 2.5, 'trans_fat': 0, 'gi': 50},
+
+    
+    # Singapore Local Fast Food / Chains
+    'ya kun kaya toast': {'carbs': 45, 'fats': 15, 'protein': 5, 'calories': 350, 'potassium': 100, 'sodium': 200, 'saturated_fat': 10, 'trans_fat': 0, 'gi': 70},
+    'ya kun soft boiled eggs': {'carbs': 1, 'fats': 10, 'protein': 12, 'calories': 140, 'potassium': 120, 'sodium': 180, 'saturated_fat': 3, 'trans_fat': 0, 'gi': 0},
+    'toast box kaya toast': {'carbs': 48, 'fats': 18, 'protein': 4, 'calories': 380, 'potassium': 110, 'sodium': 250, 'saturated_fat': 12, 'trans_fat': 0, 'gi': 70},
+    'old chang kee curry o': {'carbs': 35, 'fats': 20, 'protein': 8, 'calories': 350, 'potassium': 150, 'sodium': 450, 'saturated_fat': 8, 'trans_fat': 0.1, 'gi': 65},
+    'old chang kee sotong head': {'carbs': 15, 'fats': 12, 'protein': 15, 'calories': 230, 'potassium': 200, 'sodium': 600, 'saturated_fat': 2, 'trans_fat': 0, 'gi': 55},
+    'old chang kee chicken wing': {'carbs': 10, 'fats': 15, 'protein': 18, 'calories': 250, 'potassium': 180, 'sodium': 550, 'saturated_fat': 3, 'trans_fat': 0, 'gi': 0},
+    'mos burger yakiniku rice burger': {'carbs': 45, 'fats': 12, 'protein': 15, 'calories': 350, 'potassium': 250, 'sodium': 750, 'saturated_fat': 4, 'trans_fat': 0, 'gi': 70},
+    'mos burger teriyaki chicken burger': {'carbs': 40, 'fats': 15, 'protein': 20, 'calories': 380, 'potassium': 300, 'sodium': 850, 'saturated_fat': 3, 'trans_fat': 0, 'gi': 65},
+    'texas chicken regular': {'carbs': 12, 'fats': 22, 'protein': 25, 'calories': 340, 'potassium': 260, 'sodium': 800, 'saturated_fat': 5, 'trans_fat': 0, 'gi': 50},
+    'texas chicken honey butter biscuit': {'carbs': 25, 'fats': 12, 'protein': 4, 'calories': 220, 'potassium': 100, 'sodium': 350, 'saturated_fat': 6, 'trans_fat': 0, 'gi': 70},
+    'four fingers soy garlic chicken wing': {'carbs': 8, 'fats': 10, 'protein': 12, 'calories': 170, 'potassium': 150, 'sodium': 400, 'saturated_fat': 2, 'trans_fat': 0, 'gi': 55},
+    'crave nasi lemak with chicken wing': {'carbs': 75, 'fats': 35, 'protein': 25, 'calories': 720, 'potassium': 450, 'sodium': 1200, 'saturated_fat': 18, 'trans_fat': 0, 'gi': 80},
+    'stuffd chicken kebab': {'carbs': 45, 'fats': 15, 'protein': 28, 'calories': 430, 'potassium': 500, 'sodium': 950, 'saturated_fat': 3, 'trans_fat': 0, 'gi': 55},
+    'stuffd beef daily bowl': {'carbs': 35, 'fats': 20, 'protein': 30, 'calories': 450, 'potassium': 600, 'sodium': 1100, 'saturated_fat': 7, 'trans_fat': 0, 'gi': 50},
+    
+    
+    
     # Breakfast
     'bacon': {'carbs': 1.4, 'fats': 42, 'protein': 37, 'calories': 541, 'potassium': 565, 'sodium': 1717, 'saturated_fat': 14, 'trans_fat': 0, 'gi': 0},
     'sausage': {'carbs': 2, 'fats': 27, 'protein': 14, 'calories': 300, 'potassium': 200, 'sodium': 800, 'saturated_fat': 9, 'trans_fat': 0, 'gi': 0},

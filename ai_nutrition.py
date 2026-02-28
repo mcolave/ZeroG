@@ -27,6 +27,7 @@ def estimate_macros(food_description):
         You must estimate its nutritional values.
         
         Note: The food description might be in English, Filipino (Tagalog), or Taglish. Please translate and adapt to local Filipino foods, dishes, and measurement units if necessary.
+        If a specific restaurant or brand is mentioned (e.g. McDonald's, Jollibee, Carl's Jr.), ensure the estimated macros specifically reflect that brand's item rather than a generic equivalent.
         
         Food: "{food_description}"
         

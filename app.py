@@ -46,7 +46,7 @@ def log_entry():
         r'\bsampung\b': '10', r'\bsampu\b': '10',
         r'\bkalahating\b': '0.5', r'\bkalahati\b': '0.5'
     }
-    text = raw_text
+    text = raw_text.replace("'", "").replace("’", "")
     for tg_word, digit in tagalog_numbers.items():
         text = re.sub(tg_word, digit, text, flags=re.IGNORECASE)
     
