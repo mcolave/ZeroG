@@ -1555,22 +1555,28 @@ import difflib
 def search_food_db(query):
     query = query.lower().strip()
     
+    # helper
+    def with_name(data, name):
+        res = dict(data)
+        res['name'] = name
+        return res
+
     # 1. Direct match
     if query in FOOD_DB:
-        return FOOD_DB[query]
+        return with_name(FOOD_DB[query], query)
         
     # 2. Singularize (simple)
     if query.endswith('s') and query[:-1] in FOOD_DB:
-        return FOOD_DB[query[:-1]]
+        return with_name(FOOD_DB[query[:-1]], query[:-1])
 
     # 3. Plural -ies -> -y (e.g. berries -> berry)
     if query.endswith('ies') and query[:-3] + 'y' in FOOD_DB:
-        return FOOD_DB[query[:-3] + 'y']
+        return with_name(FOOD_DB[query[:-3] + 'y'], query[:-3] + 'y')
     
     # 3. Fuzzy match (catch typos like 'brocolli')
     matches = difflib.get_close_matches(query, FOOD_DB.keys(), n=1, cutoff=0.7)
     if matches:
-        return FOOD_DB[matches[0]]
+        return with_name(FOOD_DB[matches[0]], matches[0])
         
     # 4. Substring / Phrase Match (e.g. "lechon belly" -> "lechon")
     # We look for known food keys inside the query string (as whole words).
@@ -1588,6 +1594,6 @@ def search_food_db(query):
                 best_match_len = len(key)
                 
     if best_match:
-        return FOOD_DB[best_match]
+        return with_name(FOOD_DB[best_match], best_match)
         
     return None
