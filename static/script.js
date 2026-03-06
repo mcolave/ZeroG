@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 try {
                     const originalText = quickResetBtn.innerText;
                     quickResetBtn.innerText = "Clearing...";
-                    await fetch('/api/reset', { method: 'POST' });
+                    await fetch((window.SCRIPT_ROOT || '') + '/api/reset', { method: 'POST' });
                     await fetchData();
                     quickResetBtn.innerText = "Cleared";
                     setTimeout(() => quickResetBtn.innerText = originalText, 2000);
@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
 
                 quickTargetCalories.disabled = true;
-                await fetch('/api/settings', {
+                await fetch((window.SCRIPT_ROOT || '') + '/api/settings', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(newSettings)
@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const originalText = saveFoodBtn.innerText;
                 saveFoodBtn.innerText = 'Saving...';
 
-                const response = await fetch('/api/add_food', {
+                const response = await fetch((window.SCRIPT_ROOT || '') + '/api/add_food', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(foodData)
@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1500);
 
         try {
-            const response = await fetch('/api/log', {
+            const response = await fetch((window.SCRIPT_ROOT || '') + '/api/log', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ text: text })
@@ -281,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function fetchData() {
         try {
-            const response = await fetch('/api/data?t=' + new Date().getTime());
+            const response = await fetch((window.SCRIPT_ROOT || '') + '/api/data?t=' + new Date().getTime());
             const data = await response.json();
             // console.log("Fetcher Data:", data); // Debug
 
@@ -380,7 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (confirm("Are you sure you want to clear all food logs for today?")) {
                 try {
                     resetBtn.innerText = "Clearing...";
-                    await fetch('/api/reset', { method: 'POST' });
+                    await fetch((window.SCRIPT_ROOT || '') + '/api/reset', { method: 'POST' });
                     await fetchData();
                     resetBtn.innerText = "Data Cleared";
                     setTimeout(() => resetBtn.innerText = "Reset Today's Data", 2000);
@@ -455,7 +455,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            await fetch('/api/settings', {
+            await fetch((window.SCRIPT_ROOT || '') + '/api/settings', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newSettings)

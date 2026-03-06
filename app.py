@@ -86,7 +86,7 @@ def log_entry():
             # Cleaning logic
             
             # Expanded units regex including Tagalog (piraso, hiwa, tasa, kutsara, kutsarita, gramo, baso, basong)
-            unit_regex = r'(\d+(?:\.\d+)?)?\s*\b(grams|gram|g|ounces|ounce|oz|lbs|pounds|pieces|pcs|slices|slice|ml|milliliters|milliliter|liter|l|cup|cups|piraso|hiwa|tasa|kutsara|kutsarita|gramo|baso|basong)\b'
+            unit_regex = r'(\d+(?:\.\d+)?)?\s*\b(grams|gram|g|ounces|ounce|oz|lbs|pounds|pieces|piece|pcs|slices|slice|ml|milliliters|milliliter|liter|l|cup|cups|glass|glasses|piraso|hiwa|tasa|kutsara|kutsarita|gramo|baso|basong)\b'
             # Expanded connectors regex including Tagalog (of, in, with, ng, na)
             connector_regex = r'\s*\b(of|in|with|ng|na)\b\s*'
 
@@ -240,25 +240,37 @@ def log_entry():
              c = conn.cursor()
              
         multiplier = 1
-        match = re.search(r'(\d+(?:\.\d+)?)', text)
+        
+        # Check if the text matches the exact mapped food name and starts with a number (e.g., '555 sardines', '7 up').
+        # In this case, if the parsed text is exactly the name, don't parse a number out of it unless there's an explicit multiplier.
+        # So we'll first strip out the found food name to find the real quantity if any
+        
+        name_to_remove = found_food.get('name', '').lower()
+        text_without_name = text.replace(name_to_remove, '').strip()
+        
+        match = re.search(r'(\d+(?:\.\d+)?)', text_without_name)
         if match:
             val = float(match.group(1))
-            regex = r'(\d+(?:\.\d+)?)\s*\b(grams|gram|g|kgs|kg|kilograms|kilogram|ml|milliliters|milliliter|liters|liter|l|cup|cups|piraso|hiwa|tasa|kutsara|kutsarita|gramo|baso|basong)\b'
-            match_unit = re.search(regex, text, flags=re.IGNORECASE)
+            regex = r'(\d+(?:\.\d+)?)\s*\b(grams|gram|g|kgs|kg|kilograms|kilogram|ml|milliliters|milliliter|liters|liter|l|cup|cups|glass|glasses|piraso|pieces|piece|pcs|hiwa|slices|slice|tasa|kutsara|kutsarita|gramo|baso|basong)\b'
+            match_unit = re.search(regex, text_without_name, flags=re.IGNORECASE)
             
             if match_unit:
                  val = float(match_unit.group(1))
                  unit = match_unit.group(2).lower()
                  if unit in ['l', 'liter', 'liters', 'litro']: multiplier = val * 10
                  elif unit in ['kg', 'kgs', 'kilogram', 'kilograms', 'kilo']: multiplier = val * 10
-                 elif unit in ['cup', 'cups', 'tasa', 'baso', 'basong']: multiplier = val * 2.4
+                 elif unit in ['cup', 'cups', 'tasa', 'baso', 'basong', 'glass', 'glasses']: multiplier = val * 2.4
                  elif unit in ['kutsara']: multiplier = val * 0.15 # tbsp ~ 15g
                  elif unit in ['kutsarita']: multiplier = val * 0.05 # tsp ~ 5g
-                 elif unit in ['piraso', 'hiwa']: multiplier = val # standard 1 unit
+                 elif unit in ['piraso', 'pieces', 'piece', 'pcs', 'hiwa', 'slices', 'slice']: multiplier = val # standard 1 unit
                  else: multiplier = val / 100.0 # grams/ml default
             else:
                  multiplier = val
-            
+        elif not text_without_name and re.search(r'^\d+(\.\d+)?$', text.split()[0]):
+             # Fallback if the user typed exactly the name and nothing else, e.g. "555 sardines".
+             # In this case, multiplier is 1. If user typed "2 555 sardines", text_without_name = "2 " which is handled above.
+             multiplier = 1
+
         carbs = found_food.get('carbs', 0) * multiplier
         fats = found_food.get('fats', 0) * multiplier
         protein = found_food.get('protein', 0) * multiplier

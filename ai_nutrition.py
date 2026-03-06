@@ -48,20 +48,14 @@ def estimate_macros(food_description):
         
         print(f"DEBUG: Asking Gemini for macros of '{food_description}'...")
         
-        # Retry logic for 429 Quota Exhausted
-        import time
-        max_retries = 3
-        for attempt in range(max_retries):
-            try:
-                response = model.generate_content(prompt)
-                break # Success
-            except Exception as e:
-                err_str = str(e)
-                if '429' in err_str and attempt < max_retries - 1:
-                    print(f"DEBUG: Hit rate limit (429). Retrying in 65 seconds... (Attempt {attempt+1})")
-                    time.sleep(65)
-                else:
-                    raise e
+        # Try once without sleeping for 65s, as this blocks the web thread and causes WSGI timeouts.
+        try:
+            response = model.generate_content(prompt)
+        except Exception as e:
+            err_str = str(e)
+            if '429' in err_str:
+                print("DEBUG: Hit rate limit (429). Failing fast to prevent WSGI timeout.")
+            raise e
                     
         text = response.text.strip()
         

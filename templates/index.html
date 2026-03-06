@@ -296,7 +296,12 @@
 
     </div>
 
-    <script src="{{ url_for('static', filename='script.js') }}?v=9"></script>
+    <script>
+        // Inject the mount path from Flask.
+        // E.g. locally it is '', on PythonAnywhere it might be '/zerog'
+        window.SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+    <script src="{{ url_for('static', filename='script.js') }}?v=10"></script>
 </body>
 
 </html>
